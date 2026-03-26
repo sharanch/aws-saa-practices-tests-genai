@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS SAA-C03 Practice Test — Set 3</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e13;--surface:#111820;--surface2:#161e28;--border:#1e2d3d;
+  --accent:#f5a623;--accent2:#00d4aa;--danger:#ff4757;--success:#2ed573;
+  --warn:#ffa502;--text:#c9d1d9;--text-dim:#6e7f8e;--text-bright:#e6edf3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+
+/* ── HEADER ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:2px;}
+.logo span{color:var(--text-dim);}
+.hstats{display:flex;gap:20px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.stat{color:var(--text-dim);}.stat strong{color:var(--accent2);font-size:13px;}
+#timer{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--accent);background:rgba(245,166,35,.08);padding:5px 12px;border:1px solid rgba(245,166,35,.25);border-radius:4px;letter-spacing:2px;}
+#timer.warn{color:var(--danger);border-color:rgba(255,71,87,.4);background:rgba(255,71,87,.08);}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 57px);}
+aside{background:var(--surface);border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.stitle{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.qgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:16px;}
+.qb{aspect-ratio:1;background:#1a2533;border:1px solid var(--border);border-radius:3px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.qb:hover{border-color:var(--accent);color:var(--accent);}
+.qb.ans{background:#0d2b1e;border-color:var(--accent2);color:var(--accent2);}
+.qb.act{border-color:var(--accent);color:var(--accent);background:rgba(245,166,35,.1);}
+.qb.flg{border-color:var(--accent);background:rgba(245,166,35,.07);}
+.leg{display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;margin-bottom:16px;}
+.li{display:flex;align-items:center;gap:7px;}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.sact{margin-top:4px;display:flex;flex-direction:column;gap:7px;}
+
+/* ── QUESTION AREA ── */
+main{padding:30px 38px;overflow-y:auto;}
+.dlbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent2);text-transform:uppercase;margin-bottom:6px;}
+.qnum{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);margin-bottom:14px;}
+.qtxt{font-size:17px;font-weight:600;color:var(--text-bright);line-height:1.6;margin-bottom:26px;max-width:760px;}
+.opts{display:flex;flex-direction:column;gap:9px;max-width:760px;margin-bottom:28px;}
+.opt{display:flex;align-items:flex-start;gap:13px;padding:14px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;}
+.opt:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04);}
+.opt.sel{border-color:var(--accent2);background:rgba(0,212,170,.07);}
+.opt.cor{border-color:var(--success);background:rgba(46,213,115,.08);}
+.opt.wrg{border-color:var(--danger);background:rgba(255,71,87,.08);}
+.oltr{width:26px;height:26px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text-dim);flex-shrink:0;transition:all .15s;}
+.opt.sel .oltr{background:var(--accent2);color:#000;}
+.opt.cor .oltr{background:var(--success);color:#000;}
+.opt.wrg .oltr{background:var(--danger);color:#fff;}
+.otxt{font-size:14px;line-height:1.55;color:var(--text);padding-top:2px;}
+.opt.sel .otxt,.opt.cor .otxt{color:var(--text-bright);}
+.exp{max-width:760px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.2);border-left:3px solid var(--accent2);border-radius:6px;padding:14px 18px;margin-bottom:22px;display:none;}
+.exp.show{display:block;}
+.explbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent2);text-transform:uppercase;margin-bottom:7px;}
+.extxt{font-size:13px;line-height:1.65;color:var(--text);}
+.qact{display:flex;align-items:center;gap:10px;max-width:760px;flex-wrap:wrap;}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 18px;border-radius:5px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s;letter-spacing:.3px;}
+.btn-p{background:var(--accent);color:#000;border-color:var(--accent);}.btn-p:hover{background:#ffb740;}
+.btn-o{background:transparent;color:var(--text);border-color:var(--border);}.btn-o:hover{border-color:var(--text-dim);color:var(--text-bright);}
+.btn-g{background:transparent;color:var(--text-dim);border-color:transparent;padding:8px 10px;}.btn-g:hover{color:var(--accent);}
+.btn-d{background:transparent;color:var(--danger);border-color:var(--danger);}.btn-d:hover{background:rgba(255,71,87,.1);}
+.btn-teal{background:var(--accent2);color:#000;border-color:var(--accent2);}.btn-teal:hover{background:#00f5c4;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.flgb.on{color:var(--accent);}
+.qnav{display:flex;align-items:center;gap:7px;margin-left:auto;}
+
+/* ── RESULTS SCREEN ── */
+#rs{display:none;padding:40px;max-width:980px;margin:0 auto;}
+.rh{text-align:center;margin-bottom:32px;}
+.rtitle{font-size:36px;font-weight:800;margin-bottom:6px;}
+.rtitle.pass{color:var(--success);}.rtitle.fail{color:var(--danger);}
+.rsub{color:var(--text-dim);font-size:13px;margin-bottom:18px;}
+.sring{width:130px;height:130px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;border:3px solid var(--border);}
+.spct{font-size:34px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.slbl{font-size:10px;color:var(--text-dim);letter-spacing:1px;}
+
+.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.rc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;}
+.rcv{font-size:26px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:3px;}
+.rcl{font-size:10px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
+
+/* ── DOMAIN BARS ── */
+.section-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.dbrk{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:24px;}
+.dr{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.dr:last-child{margin-bottom:0;}
+.dn{width:220px;font-size:12px;color:var(--text-dim);flex-shrink:0;}
+.dbw{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.dbb{height:100%;border-radius:4px;transition:width 1s ease;}
+.ds{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-bright);width:70px;text-align:right;flex-shrink:0;}
+.dtag{font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:3px;flex-shrink:0;font-weight:700;}
+.dtag.strong{background:rgba(46,213,115,.15);color:var(--success);}
+.dtag.ok{background:rgba(245,166,35,.12);color:var(--warn);}
+.dtag.weak{background:rgba(255,71,87,.15);color:var(--danger);}
+
+/* ── TOPIC WEAKNESSES ── */
+.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 18px;}
+.topic-card.critical{border-color:rgba(255,71,87,.35);background:rgba(255,71,87,.04);}
+.topic-card.caution{border-color:rgba(255,165,2,.3);background:rgba(255,165,2,.04);}
+.tc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.tc-name{font-size:13px;font-weight:600;color:var(--text-bright);}
+.tc-score{font-family:'JetBrains Mono',monospace;font-size:12px;}
+.tc-score.critical{color:var(--danger);}
+.tc-score.caution{color:var(--warn);}
+.tc-desc{font-size:12px;color:var(--text-dim);line-height:1.55;}
+
+/* ── AI FEEDBACK PANEL ── */
+.feedback-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:24px;}
+.feedback-loading{display:flex;align-items:center;gap:12px;color:var(--text-dim);font-size:13px;font-family:'JetBrains Mono',monospace;}
+.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.feedback-content{font-size:14px;line-height:1.75;color:var(--text);}
+.feedback-content h3{font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:2px;color:var(--accent2);text-transform:uppercase;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.feedback-content h3:first-child{margin-top:0;}
+.feedback-content p{margin-bottom:10px;}
+.feedback-content ul{margin:8px 0 10px 18px;}
+.feedback-content li{margin-bottom:5px;font-size:13px;color:var(--text-dim);}
+.feedback-content li strong{color:var(--text-bright);}
+.feedback-content .pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 8px;border-radius:3px;margin:2px 3px;background:rgba(0,212,170,.1);color:var(--accent2);border:1px solid rgba(0,212,170,.2);}
+.feedback-content .pill.red{background:rgba(255,71,87,.1);color:var(--danger);border-color:rgba(255,71,87,.2);}
+.feedback-content .pill.yellow{background:rgba(255,165,2,.1);color:var(--warn);border-color:rgba(255,165,2,.2);}
+
+/* ── MISSED Q LIST ── */
+.missed-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.missed-item{background:var(--surface);border:1px solid rgba(255,71,87,.2);border-radius:7px;padding:14px 16px;}
+.missed-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.missed-qnum{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);}
+.missed-domain{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);background:rgba(0,212,170,.08);padding:2px 7px;border-radius:3px;}
+.missed-topic{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:rgba(245,166,35,.08);padding:2px 7px;border-radius:3px;}
+.missed-q{font-size:13px;color:var(--text-bright);margin-bottom:8px;line-height:1.45;}
+.missed-answers{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;font-family:'JetBrains Mono',monospace;}
+.ans-wrong{color:var(--danger);}.ans-right{color:var(--success);}
+
+/* ── STUDY PLAN ── */
+.study-plan{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.sp-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.sp-priority{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.sp-priority.high{color:var(--danger);}
+.sp-priority.med{color:var(--warn);}
+.sp-priority.low{color:var(--success);}
+.sp-title{font-size:13px;font-weight:700;color:var(--text-bright);margin-bottom:6px;}
+.sp-body{font-size:12px;color:var(--text-dim);line-height:1.55;}
+
+.ract{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding-top:8px;}
+.sbanner{position:fixed;bottom:18px;right:18px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 14px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--accent2);opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;z-index:999;}
+.sbanner.show{opacity:1;transform:translateY(0);}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--surface);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;}aside{position:static;height:auto;}main{padding:18px;}
+  .rgrid{grid-template-columns:repeat(2,1fr);}
+  .topic-grid,.study-plan{grid-template-columns:1fr;}
+  .dn{width:140px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AWS <span>//</span> SAA-C03 <span>//</span> Practice Exam — Set 2</div>
+  <div class="hstats">
+    <div class="stat">Answered: <strong id="ac">0</strong>/65</div>
+    <!-- Set 2 -->
+    <div class="stat">Flagged: <strong id="fc">0</strong></div>
+    <div id="timer">02:10:00</div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="stitle">Question Map</div>
+    <div class="qgrid" id="qgrid"></div>
+    <div class="leg">
+      <div class="li"><div class="ld" style="background:#1a2533;border:1px solid #1e2d3d"></div>Unanswered</div>
+      <div class="li"><div class="ld" style="background:#0d2b1e;border:1px solid #00d4aa"></div>Answered</div>
+      <div class="li"><div class="ld" style="background:rgba(245,166,35,.08);border:1px solid #f5a623"></div>Flagged / Active</div>
+    </div>
+    <div class="sact">
+      <button class="btn btn-o" onclick="save()" style="font-size:12px;">&#128190; Save Progress</button>
+      <button class="btn btn-o" onclick="load()" style="font-size:12px;">&#128194; Load Saved</button>
+      <button class="btn btn-d" onclick="askSubmit()" style="font-size:12px;">Submit Test</button>
+    </div>
+  </aside>
+
+  <main>
+    <div id="qs">
+      <div class="dlbl" id="qdomain"></div>
+      <div class="qnum"  id="qnum"></div>
+      <div class="qtxt"  id="qtxt"></div>
+      <div class="opts"  id="qopts"></div>
+      <div class="exp"   id="qexp">
+        <div class="explbl">Explanation</div>
+        <div class="extxt" id="qexptxt"></div>
+      </div>
+      <div class="qact">
+        <button class="btn btn-g flgb" id="flgb" onclick="toggleFlag()">&#9873; Flag</button>
+        <button class="btn btn-o" id="chkb" onclick="checkAns()" disabled>Check Answer</button>
+        <div class="qnav">
+          <button class="btn btn-o" id="prevb" onclick="nav(-1)">&larr; Prev</button>
+          <button class="btn btn-p" id="nextb" onclick="nav(1)">Next &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="rs"></div>
+<div class="sbanner" id="sb">&#10003; Progress saved</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  QUESTION BANK  (65 questions — Set 3)
+// ─────────────────────────────────────────────
+var Q=[
+// SECURE ARCHITECTURES (23)
+{d:"Secure Architectures",t:"IAM Policy Evaluation",q:"A developer has an IAM policy that explicitly allows s3:PutObject on a specific bucket. Their account also has an SCP that allows all S3 actions. However, a bucket policy on the target bucket contains an explicit Deny for the developer's IAM user. Can the developer upload objects?",o:["Yes — the IAM Allow overrides the bucket policy Deny","No — an explicit Deny in any policy always overrides an Allow, regardless of where the Allow comes from","Yes — SCPs take precedence over bucket policies","It depends on whether the developer has MFA enabled"],a:1,e:"AWS policy evaluation logic: an explicit Deny anywhere in the evaluation chain (SCP, IAM policy, resource policy) overrides any Allow. The bucket policy Deny for the developer's user is an explicit Deny that cannot be overridden by the IAM Allow or SCP."},
+{d:"Secure Architectures",t:"KMS Key Policies",q:"A Lambda function in Account A needs to decrypt data using a KMS CMK owned by Account B. The CMK's key policy does NOT mention Account A. The Lambda's IAM role has kms:Decrypt permission for the CMK ARN. Can the Lambda decrypt?",o:["Yes — IAM policies alone are sufficient to grant cross-account KMS access","No — for cross-account KMS access, both the KMS key policy in Account B must grant Account A access AND Account A's IAM policy must allow the action","Yes — KMS automatically allows cross-account access when the ARN is specified","No — cross-account KMS access requires AWS Support involvement"],a:1,e:"KMS key policies are resource-based policies and are required for cross-account access. The key policy must explicitly grant the external account (or principal) permission. An IAM policy in the calling account is also required. Both must allow the action — neither alone is sufficient for cross-account KMS calls."},
+{d:"Secure Architectures",t:"Inspector",q:"A company runs containerized workloads on Amazon ECS with EC2 launch type and also has Lambda functions in production. They want continuous vulnerability scanning of container images AND Lambda function code packages for known CVEs without manual scans. Which service provides this automatically?",o:["AWS Config with custom rules that check ECR image scan results","Amazon Inspector v2 — automatically scans ECR container images on push and Lambda function packages continuously for CVEs and software vulnerabilities","AWS Security Hub — aggregates vulnerability findings from third-party scanners","Amazon GuardDuty — monitors for runtime anomalies in containers"],a:1,e:"Amazon Inspector v2 integrates with ECR to scan images on push and re-scan when new CVE data is published. It also scans Lambda function deployment packages and layers for vulnerable libraries. Findings are surfaced with risk scores and remediation guidance. GuardDuty handles runtime threat detection, not vulnerability scanning."},
+{d:"Secure Architectures",t:"Certificate Manager",q:"A company needs to deploy an HTTPS listener on an ALB. The SSL/TLS certificate must auto-renew before expiration without any manual action. Which approach achieves this with ZERO operational overhead?",o:["Purchase a 2-year certificate from a third-party CA and import it into ACM, setting a calendar reminder to renew","Use AWS Certificate Manager (ACM) to provision a public certificate — ACM automatically renews managed certificates before expiration and deploys the renewed cert to the ALB","Generate a self-signed certificate and upload it to IAM certificate store","Use Let's Encrypt with a certbot cron job on an EC2 instance"],a:1,e:"ACM-managed public certificates renew automatically (typically 60 days before expiry) with no operator action. Once the certificate is associated with the ALB, the renewed certificate is also automatically deployed. Imported third-party certificates are NOT automatically renewed by ACM — the customer must renew and reimport manually."},
+{d:"Secure Architectures",t:"VPC Security Layers",q:"A company's web tier (public subnet) communicates with an app tier (private subnet). The security team wants to block all traffic EXCEPT port 8080 between the tiers, and wants the block to apply even if a Security Group rule is misconfigured. What provides a second layer of defense?",o:["Enable VPC Flow Logs to detect unauthorized traffic and alert the team","Configure a Network ACL on the app tier's private subnet to allow only port 8080 inbound from the web tier's CIDR and deny everything else — NACLs are stateless and apply independently of Security Groups","Use AWS Network Firewall to inspect all inter-subnet traffic","Apply an IAM policy that restricts EC2 network actions to port 8080"],a:1,e:"Network ACLs are stateless, subnet-level firewalls that evaluate rules in order. Unlike Security Groups, NACLs apply to ALL traffic entering/leaving the subnet regardless of Security Group configuration. They provide a defense-in-depth layer. Remember: NACLs are stateless, so both inbound AND outbound rules must be configured."},
+{d:"Secure Architectures",t:"S3 Pre-Signed URLs",q:"A media platform stores private videos in S3. Authenticated users should be able to stream their purchased videos directly from S3 for up to 1 hour without the application server acting as a proxy. What is the CORRECT implementation?",o:["Make the S3 bucket public and use CloudFront geo-restrictions to control access","Generate a pre-signed S3 URL with a 1-hour expiration on the server side using the application's IAM role credentials, and return the URL to the authenticated client","Use Cognito Identity Pools to give each user direct S3 read access to the entire bucket","Enable S3 static website hosting and protect it with a CloudFront signed cookie"],a:1,e:"Pre-signed URLs are generated server-side using temporary credentials from an IAM role. They encode the bucket, key, expiration time, and a signature. The client can use the URL to access the specific object until expiry — no AWS credentials are exposed to the client. After 1 hour, the URL is invalid."},
+{d:"Secure Architectures",t:"Security Groups",q:"Two EC2 instances (web and database) are in the same VPC. The database should only accept MySQL connections from the web instance. What is the MOST maintainable Security Group configuration?",o:["Allow port 3306 inbound from the web instance's private IP address in the DB Security Group","Allow port 3306 inbound from the web tier's Security Group ID as the source in the DB Security Group — when web instances are replaced, the new instances inherit the same SG and automatically gain access","Allow port 3306 inbound from the entire VPC CIDR range in the DB Security Group","Disable the DB Security Group and use Network ACLs to restrict port 3306 by IP"],a:1,e:"Referencing a Security Group as the source in another Security Group is best practice for EC2-to-EC2 rules. When instances are added, replaced, or scaled, they inherit the referenced SG and access is maintained automatically. IP-based rules require manual updates whenever instance IPs change."},
+{d:"Secure Architectures",t:"Detective",q:"GuardDuty raises a critical finding that an IAM role has been exfiltrating data via unusual S3 API calls. The security team needs to trace the full chain of events: which user assumed the role, from which IP, what APIs were called, and which resources were affected. Which service is best suited for this investigation?",o:["AWS Security Hub — provides a consolidated findings dashboard","Amazon Detective — automatically builds a graph model from CloudTrail, VPC Flow Logs, and GuardDuty findings to enable visual security investigation without manual log correlation","CloudWatch Logs Insights — query CloudTrail logs with SQL-like syntax","AWS Trusted Advisor — provides security recommendations"],a:1,e:"Amazon Detective automatically ingests and correlates CloudTrail, VPC Flow Logs, and GuardDuty data into a behavior graph. Investigators can visually traverse the entity relationships (user → role → API calls → resources) to understand the blast radius and timeline of a security incident without writing log queries."},
+{d:"Secure Architectures",t:"Encryption in Transit",q:"An ALB listener is configured with HTTP (port 80) only. The security team requires all HTTP requests to be automatically redirected to HTTPS without changing any backend application code. What is the CORRECT ALB configuration?",o:["Configure the EC2 instances to return a 301 redirect for all HTTP requests","Add an HTTP:80 listener rule that performs a redirect action to HTTPS:443 — ALB natively supports HTTP-to-HTTPS redirect rules at the listener level","Use AWS WAF to intercept HTTP requests and redirect them","Configure an SCP that denies ALB HTTP listener creation"],a:1,e:"ALB HTTP listeners support a native Redirect action that returns a 301 or 302 to the client pointing to HTTPS. This is configured entirely at the ALB level — no application code changes are required. AWS WAF is for request inspection and filtering, not protocol redirection."},
+{d:"Secure Architectures",t:"Cognito MFA",q:"A company's user-facing web application uses Amazon Cognito User Pools for authentication. The security team mandates that all users in the 'admin' group must complete MFA on every login. Regular users can skip MFA. How should this be configured?",o:["Enforce MFA at the Cognito User Pool level for all users","Use Cognito advanced security features with adaptive authentication to require MFA based on risk score","Set MFA as 'Required' at the group level for the admin group using a Pre-Authentication Lambda trigger that checks group membership and forces an MFA challenge","Deploy a second Cognito User Pool exclusively for admin users with MFA enforced"],a:2,e:"Cognito User Pools support MFA enforcement via a Pre-Authentication Lambda trigger. The trigger checks the user's group membership and can return a challenge requiring MFA for admin group members while allowing regular users to proceed without it. Enforcing MFA at the pool level applies it to everyone."},
+{d:"Secure Architectures",t:"PrivateLink",q:"Company A offers a SaaS API. Company B wants to consume Company A's API from within their VPC without the traffic ever traversing the public internet, and without VPC peering (to avoid overlapping CIDR concerns). What should Company A configure?",o:["VPC Peering between Company A's and Company B's VPCs","Company A exposes the service via AWS PrivateLink (a VPC Endpoint Service backed by an NLB); Company B creates a VPC Interface Endpoint in their VPC that connects to Company A's service privately","Company B uses Direct Connect to reach Company A's API over a private circuit","Company A whitelists Company B's public IP in their ALB Security Group"],a:1,e:"AWS PrivateLink allows a service provider to expose a service through an NLB-backed Endpoint Service. Consumers create Interface Endpoints in their own VPC, which receive private IPs in the consumer's VPC CIDR. Traffic never leaves the AWS network, no VPC peering is required, and CIDR overlaps are irrelevant."},
+{d:"Secure Architectures",t:"Config Rules",q:"A company needs to detect whenever an EC2 Security Group is modified to allow unrestricted inbound access (0.0.0.0/0) on any port, and automatically revert the change within 5 minutes. What is the BEST approach?",o:["Enable VPC Flow Logs and write a Lambda function to scan for open Security Groups hourly","Use the AWS Config managed rule 'vpc-sg-open-only-to-authorized-ports' and configure an automatic SSM Automation remediation action that removes the offending inbound rule when the rule is non-compliant","Create a GuardDuty threat intel set that detects open Security Groups","Apply an SCP that denies ec2:AuthorizeSecurityGroupIngress for all ports"],a:1,e:"AWS Config managed rules evaluate resource configurations on change. The vpc-sg-open-only-to-authorized-ports rule triggers when a Security Group allows unrestricted access. With an SSM Automation remediation attached, the change is automatically reverted. Config + SSM Automation is the canonical auto-remediation pattern."},
+{d:"Secure Architectures",t:"Organizations & SCPs",q:"A company's AWS Organization has production and development OUs. They want to allow Spot Instances only in the development OU (to avoid accidental Spot usage in production). Which control enforces this?",o:["Create IAM policies in each production account denying ec2:RequestSpotInstances","Attach an SCP to the production OU that denies ec2:RequestSpotInstances — this blocks Spot in production accounts while development accounts are unaffected","Use AWS Budgets to alert when Spot is used in production accounts","Enable AWS Cost Anomaly Detection to catch unexpected Spot usage in production"],a:1,e:"SCPs attached to an OU apply to all accounts in that OU. A Deny SCP on ec2:RequestSpotInstances in the production OU blocks Spot usage regardless of IAM permissions in production accounts. Development accounts in a separate OU are unaffected. Config and Budgets are detective, not preventive."},
+{d:"Secure Architectures",t:"WAF Bot Control",q:"An e-commerce site suffers from inventory hoarding bots that add all limited-edition products to carts faster than human users can. The site is behind CloudFront. Which AWS WAF feature can identify and challenge non-human bot traffic at the edge?",o:["AWS Shield Advanced — provides DDoS protection including bot mitigation","AWS WAF Bot Control managed rule group — classifies requests as verified bots, unverified bots, or human traffic, and can challenge or block bot requests using CAPTCHA","CloudFront signed cookies to restrict access to authenticated sessions only","Route 53 health checks to detect bot traffic patterns"],a:1,e:"AWS WAF Bot Control is a managed rule group that uses traffic analytics and browser fingerprinting to classify and manage bot traffic. It can identify common bots, challenge suspicious clients with CAPTCHA, and block known scrapers — all at the CloudFront edge before requests reach the origin."},
+{d:"Secure Architectures",t:"Nitro Enclaves",q:"A company processes highly sensitive medical records on EC2. They require that even their own administrators with root access to the host EC2 instance cannot access the decrypted data during processing. What EC2 feature enables this isolated secure computation?",o:["Encrypted EBS volumes with a KMS CMK — root users cannot access the key","AWS Nitro Enclaves — isolated virtual machines within the EC2 instance with no persistent storage, no interactive access, and cryptographic attestation, ensuring even the host cannot access enclave memory","Dedicated EC2 instances with single-tenant hardware","AWS CloudHSM for key storage preventing administrator access"],a:1,e:"AWS Nitro Enclaves provide an isolated, hardened environment within an EC2 instance. The enclave has no network access, no persistent storage, and no SSH — not even the EC2 host OS or root user can access enclave memory. Attestation documents prove the enclave's identity to KMS before decryption keys are released."},
+{d:"Secure Architectures",t:"CloudTrail Lake",q:"A security team needs to run SQL queries across CloudTrail API events for all 50 accounts in their Organization for the past 7 years. Current logs are in S3, but Athena queries take too long because of the unpartitioned data. Which option provides the most performant querying experience?",o:["Add manual date partitions to the S3 CloudTrail prefix structure and rebuild Athena tables","Enable CloudTrail Lake with an Organization-level event data store — it ingests events from all accounts automatically and supports fast SQL queries via the console or API without S3 management","Stream all CloudTrail events to Amazon OpenSearch for full-text search","Load CloudTrail logs into Amazon Redshift for columnar SQL analytics"],a:1,e:"CloudTrail Lake is a managed audit log analytics platform. It ingests events from all Organization accounts into a managed event data store and provides a SQL query interface with sub-minute query times. No S3 management, Athena tables, or ETL pipelines are required. Retention up to 7 years is supported."},
+{d:"Secure Architectures",t:"Resource Policies",q:"A Lambda function in Account A invokes another Lambda function in Account B. The Account A Lambda's IAM role has lambda:InvokeFunction permission for the Account B function ARN. Is this sufficient for the cross-account invocation?",o:["Yes — IAM permissions in the caller's account are sufficient for cross-account Lambda invocations","No — for cross-account Lambda invocations, the target Lambda's resource-based policy (function policy) must also grant the caller's account or IAM principal permission to invoke it","Yes — Lambda automatically grants invocation permissions when the function ARN is specified","No — cross-account Lambda invocations require VPC peering between the two accounts"],a:1,e:"Lambda uses resource-based policies (function policies) to control cross-account access. Both the caller's IAM policy AND the target Lambda's function policy must allow the invocation. This is the same dual-permission model as S3 bucket policies and KMS key policies for cross-account access."},
+{d:"Secure Architectures",t:"CloudHSM",q:"A company migrates an Oracle database to AWS. The application performs TLS offloading and requires that private keys for TLS certificates are stored in dedicated hardware with exclusive customer control. The keys must never leave the hardware unencrypted. Which solution meets this?",o:["Store private keys in AWS Secrets Manager with encryption using a KMS CMK","Use AWS CloudHSM — provides dedicated, single-tenant HSM hardware where the customer manages keys exclusively; keys never leave the HSM in plaintext and can be used for TLS offloading via PKCS#11 or JCE","Use ACM Private CA to generate the TLS certificates — keys are managed by AWS","Store keys encrypted on EBS volumes with KMS-managed encryption"],a:1,e:"CloudHSM gives exclusive access to dedicated FIPS 140-2 Level 3 hardware. The customer manages all key material — AWS has no access. Applications use standard cryptographic APIs (PKCS#11, JCE, OpenSSL) to perform operations on the HSM without the keys ever leaving in plaintext. ACM and Secrets Manager are managed services where AWS has some access to key material."},
+{d:"Secure Architectures",t:"Access Analyzer",q:"A security team wants to automatically identify S3 buckets, IAM roles, KMS keys, and Lambda functions that are accessible by external AWS accounts or public internet — before attackers discover them. Which service provides this visibility?",o:["AWS Trusted Advisor — checks for publicly accessible S3 buckets","AWS IAM Access Analyzer — continuously analyzes resource-based policies to identify resources shared with external principals, generating findings for any unintended external access","Amazon Macie — detects sensitive data in S3 buckets","AWS Config — tracks resource configuration changes over time"],a:1,e:"IAM Access Analyzer uses automated reasoning to analyze resource policies (S3 buckets, IAM roles, KMS keys, Lambda functions, SQS queues, Secrets Manager secrets) and generates findings when a resource is accessible from outside the defined zone of trust (organization or account). Trusted Advisor checks only S3 public access, not the full breadth of resources."},
+{d:"Secure Architectures",t:"SSM Parameter Store",q:"A development team stores database passwords in SSM Parameter Store as SecureString parameters. A junior developer accidentally writes code that logs the parameter value to CloudWatch Logs. What additional control would have PREVENTED the secret from being exposed in logs?",o:["Use Standard tier parameters instead of Advanced tier","Store the secret in AWS Secrets Manager and integrate with CloudWatch Logs data protection policies that automatically redact patterns matching secret ARNs from log streams","Restrict CloudWatch Logs retention to 1 day so the exposure window is minimized","Enable parameter store access logging in CloudTrail"],a:1,e:"AWS Secrets Manager integrates with CloudWatch Logs data protection to mask sensitive data patterns in log streams. Data protection policies can redact values matching secret ARNs before they are stored in CloudWatch Logs. Restricting retention minimizes risk but doesn't prevent exposure. Parameter Store has no equivalent log redaction integration."},
+{d:"Secure Architectures",t:"Firewall Manager",q:"A company has 40 AWS accounts in an Organization. The security team must ensure that every new account automatically has AWS WAF rules applied to all ALBs and CloudFront distributions within 1 hour of account creation — without manual intervention. What achieves this?",o:["Create a CloudFormation StackSet that deploys WAF rules and run it manually for each new account","Use AWS Firewall Manager with an Organization-wide WAF policy — Firewall Manager automatically applies WAF rules to new and existing ALBs and CloudFront distributions across all Organization accounts","Use an EventBridge rule that detects new account creation and triggers a Lambda to deploy WAF rules","Enable AWS Config in all accounts with a remediation rule that creates WAF associations"],a:1,e:"AWS Firewall Manager enforces security policies (WAF rules, Shield Advanced, Security Groups, Network Firewall) across all accounts in an Organization automatically. New accounts that join the Organization inherit the policies without manual intervention. StackSets require manual triggering per account and don't automatically apply to new accounts."},
+{d:"Secure Architectures",t:"IAM Roles Anywhere",q:"A company runs workloads on on-premises servers that need to call AWS APIs (S3, DynamoDB). They currently use long-lived IAM user access keys stored on the servers. What is the AWS-recommended replacement that provides temporary credentials to on-premises workloads?",o:["Rotate the IAM access keys every 90 days and store them in HashiCorp Vault","Use IAM Roles Anywhere — on-premises servers authenticate using X.509 certificates from a trusted CA, and AWS issues short-lived IAM role credentials in exchange, eliminating long-lived keys","Deploy a Site-to-Site VPN and use IAM roles on EC2 instead","Create an EC2 instance in AWS as a proxy that holds the IAM role and receives calls from on-premises servers"],a:1,e:"IAM Roles Anywhere extends the IAM roles model to workloads outside AWS. On-premises servers present X.509 certificates signed by a trusted CA (registered with IAM Roles Anywhere). AWS validates the certificate and issues temporary IAM credentials. No long-lived access keys are needed anywhere."},
+{d:"Secure Architectures",t:"GuardDuty Malware Protection",q:"GuardDuty reports the finding 'Execution:EC2/MaliciousFile' on an EC2 instance. The team believes the instance has been compromised with malware. What is the RECOMMENDED immediate containment step?",o:["Terminate the EC2 instance immediately to stop the malware","Isolate the instance by removing it from all Auto Scaling groups, changing its Security Group to one that blocks all inbound and outbound traffic, and preserve a forensic snapshot before any further action","Reboot the instance to clear in-memory malware","Patch the instance using AWS Systems Manager Patch Manager"],a:1,e:"Containment without destruction is the correct incident response posture. Isolating the instance (removing from load balancer and ASG, applying a quarantine Security Group with no ingress/egress) stops lateral movement while preserving forensic evidence. Terminating destroys evidence. Rebooting may clear in-memory indicators but doesn't remove persistent malware."},
+// RESILIENT ARCHITECTURES (21)
+{d:"Resilient Architectures",t:"Health Dashboard & EventBridge",q:"A company wants to be automatically notified via email whenever AWS announces a health event (service degradation, scheduled maintenance) affecting resources in their account — without polling the AWS Health console manually. What should the architect configure?",o:["Set a CloudWatch alarm on the AWS/Health metric namespace","Use Amazon EventBridge with an event rule matching AWS Health events (source: aws.health) and route matching events to an SNS topic that sends emails to the operations team","Subscribe to the AWS Service Health Dashboard RSS feed and parse it with a Lambda function","Enable AWS Trusted Advisor notifications in the support console"],a:1,e:"AWS Health publishes account-specific health events to EventBridge automatically. An EventBridge rule matching source 'aws.health' routes events to SNS, triggering email notifications. This is real-time, fully automated, and requires no polling."},
+{d:"Resilient Architectures",t:"SQS Visibility Timeout",q:"A Lambda function processes SQS messages. Each message takes up to 4 minutes to process. After processing, Lambda deletes the message. The visibility timeout is set to 30 seconds. What problem will occur, and what is the fix?",o:["Messages will be processed twice — increase the visibility timeout to at least 6 minutes (1.5x the max processing time) to prevent the message from reappearing while being processed","Messages will be lost — enable SQS long polling to retain messages longer","Lambda will time out — increase the Lambda timeout to 4 minutes","There is no problem — SQS automatically adjusts visibility timeout based on Lambda execution time"],a:0,e:"After 30 seconds, an undeleted SQS message becomes visible again and can be picked up by another consumer, causing duplicate processing. The visibility timeout must be set longer than the maximum processing time. AWS recommends 1.5x–2x the expected processing time. Lambda does not automatically extend SQS visibility timeouts."},
+{d:"Resilient Architectures",t:"Aurora Failover",q:"An Aurora MySQL cluster has one writer and two readers. During a scheduled maintenance window, Aurora performs a failover that promotes a reader to the writer. Application connections using the cluster endpoint (writer endpoint) fail for 30 seconds after failover. How can the architect minimize this connection disruption?",o:["Increase the Aurora cluster's maintenance window duration","Configure the application to use the Aurora cluster endpoint with JDBC/application retry logic that reconnects on connection failure, and enable Aurora fast failover (using the cluster endpoint DNS TTL of 5 seconds)","Create an RDS Proxy in front of the Aurora cluster — the proxy maintains persistent connections and transparently reconnects to the new writer after failover","Switch to Aurora Global Database for zero-downtime failover"],a:2,e:"RDS Proxy maintains a pool of persistent database connections. During Aurora failover, the proxy reconnects to the new primary transparently, without dropping application connections. Applications connected to the Proxy experience minimal disruption. The cluster endpoint DNS TTL (~5 seconds) helps but doesn't eliminate connection drops for applications that cache DNS."},
+{d:"Resilient Architectures",t:"Step Functions",q:"A multi-step order processing workflow uses AWS Step Functions. One state calls an external payment API that occasionally returns transient 503 errors. Rather than failing the execution, the architect wants to retry the payment API call up to 3 times with exponential backoff before transitioning to a Fail state. What is the correct configuration?",o:["Add retry logic inside the Lambda function that calls the payment API","Configure a Retry field on the Task state in the state machine definition with MaxAttempts=3, IntervalSeconds=2, and BackoffRate=2 — Step Functions natively handles retries at the workflow level","Use a Catch field that routes 503 errors back to the same Task state","Deploy a separate retry Lambda that wraps the payment API call"],a:1,e:"Step Functions Task states support a native Retry configuration. MaxAttempts defines retry count, IntervalSeconds sets the initial wait, and BackoffRate multiplies the wait on each retry. This is declared in the state machine definition — no custom retry code is needed in the Lambda function. Catch handles final failures after all retries are exhausted."},
+{d:"Resilient Architectures",t:"ELB Health Checks",q:"An ALB target group has 4 EC2 instances. One instance has a memory leak that causes the application to respond slowly with HTTP 200 but incorrect responses after 2 hours. Standard HTTP health checks pass because the status code is 200. How can the ALB detect this degraded instance?",o:["Reduce the health check interval to 5 seconds so the ALB detects the slowdown faster","Implement application-level health check logic at the /health endpoint that validates internal state (database connectivity, cache availability, memory pressure) and returns HTTP 503 when unhealthy — the ALB then routes around the degraded instance","Use CloudWatch memory metrics to terminate and replace the instance automatically","Enable enhanced health reporting for Elastic Beanstalk"],a:1,e:"ALB health checks only evaluate HTTP status codes by default. A degraded-but-200 instance passes default health checks. A meaningful /health endpoint that validates internal application state and returns 503 on degradation allows the ALB to detect and route around the instance. This is the recommended deep health check pattern."},
+{d:"Resilient Architectures",t:"EC2 Auto Scaling",q:"A web application uses an Auto Scaling group. During a deployment, a new AMI is released. The architect wants to replace all running instances with the new AMI with zero downtime and the ability to roll back if the new instances are unhealthy. Which ASG feature provides this?",o:["Terminate all instances manually and let Auto Scaling replace them with the new launch template version","Use AWS Auto Scaling instance refresh with a minimum healthy percentage of 50% — it replaces instances in batches while keeping at least 50% capacity running, and a CloudWatch alarm can pause or cancel the refresh on unhealthy signals","Update the launch template and wait for natural scale-in/out events to gradually replace instances","Deploy a second ASG with the new AMI and use weighted ALB target groups to shift traffic"],a:1,e:"Instance Refresh is the native ASG rolling replacement feature. It replaces instances in configurable batches, respecting minimum healthy percentage. It integrates with CloudWatch alarm checks — if health metrics degrade during refresh, it pauses automatically. A rollback restores the previous launch template version."},
+{d:"Resilient Architectures",t:"DynamoDB Streams",q:"An application writes orders to DynamoDB. A separate service must process each new order exactly once within 5 seconds of creation for real-time fraud detection. DynamoDB Streams captures item-level changes. What is the MOST direct integration pattern?",o:["Poll DynamoDB Streams with a Lambda function every 5 seconds using a scheduled EventBridge rule","Configure a Lambda event source mapping on the DynamoDB Stream — Lambda is automatically invoked in near-real-time with a batch of stream records as items are written","Use DynamoDB Streams to push events to Kinesis Data Firehose for near-real-time delivery","Write a polling application on EC2 that reads the stream using the DynamoDB Streams API"],a:1,e:"Lambda event source mappings natively consume DynamoDB Streams. When items are written to the table, Lambda is invoked automatically — typically within 1 second — with a batch of stream records. No polling infrastructure is needed. The shard iterator is managed by Lambda, and exactly-once semantics are provided per shard."},
+{d:"Resilient Architectures",t:"Active-Active Multi-Region",q:"A gaming company requires their leaderboard API to serve requests from both us-east-1 and eu-west-1 simultaneously with users automatically routed to the nearest region. Both regions must accept writes. Data must be consistent across regions within 2 seconds. What is the CORRECT data store choice?",o:["RDS Multi-AZ deployed in both regions with manual replication scripts","DynamoDB Global Tables with Route 53 latency-based routing — active-active writes in both regions with sub-second cross-region replication","ElastiCache for Redis with Redis Replication Group spanning both regions","S3 with Cross-Region Replication and Route 53 latency-based routing"],a:1,e:"DynamoDB Global Tables provide active-active multi-region tables where writes in any region are replicated to all replicas within typically 1 second. Combined with Route 53 latency-based routing, users are directed to the nearest region for both reads and writes. RDS Multi-AZ is single-region. ElastiCache does not support active-active cross-region writes."},
+{d:"Resilient Architectures",t:"Warm Pool",q:"An e-commerce site experiences flash sales that cause sudden 10x traffic spikes. The Auto Scaling group scales out but newly launched EC2 instances take 8 minutes to bootstrap (install packages, warm caches). During this 8-minute gap, the existing instances are overwhelmed. What ASG feature eliminates this bootstrap latency?",o:["Use a larger instance type so each instance handles more concurrent requests","Configure a Warm Pool for the ASG — pre-initialized instances are kept in a stopped or running state outside the ASG, and during scale-out they are added immediately without bootstrap delay","Pre-bake all dependencies into a custom AMI to reduce bootstrap time to under 2 minutes","Enable predictive scaling to anticipate the flash sale traffic in advance"],a:1,e:"Warm Pools maintain pre-initialized EC2 instances in a stopped (or hibernated, or running) state. On scale-out, instances are pulled from the warm pool and added to the ASG in seconds rather than minutes. Combined with pre-baked AMIs, this eliminates bootstrap latency entirely. Predictive scaling helps with predictable patterns but can't anticipate arbitrary flash sales."},
+{d:"Resilient Architectures",t:"SQS FIFO",q:"A financial trading platform must process trade confirmations in strict first-in-first-out order per trading account, with exactly-once processing guarantees. Which SQS queue type is required?",o:["SQS Standard Queue — highest throughput, at-least-once delivery","SQS FIFO Queue with MessageGroupId set to the trading account ID — guarantees order and exactly-once processing per message group","SQS Standard Queue with a sequence number attribute and application-level reordering","Kinesis Data Streams with a partition key set to the account ID"],a:1,e:"SQS FIFO queues guarantee that messages within the same MessageGroupId are delivered in the exact order they were sent, with exactly-once processing (deduplication). Setting MessageGroupId to the trading account ID ensures per-account ordering while allowing parallel processing across different account groups. Standard queues offer at-least-once delivery with possible reordering."},
+{d:"Resilient Architectures",t:"Elastic Disaster Recovery",q:"A company runs critical workloads on on-premises VMware VMs. They need a DR solution where VMs are continuously replicated to AWS and can be launched in AWS within 15 minutes of a disaster declaration, with an RPO of under 1 hour. What AWS service provides this?",o:["AWS Server Migration Service (SMS) — migrates VMs to EC2 on a schedule","AWS Elastic Disaster Recovery (DRS) — continuously replicates on-premises servers to AWS at the block level with RPO under 15 minutes and RTO of minutes","AWS DataSync — syncs file-level data from on-premises to S3 for DR","AWS Backup with cross-region copy to an AWS secondary region"],a:1,e:"AWS Elastic Disaster Recovery continuously replicates on-premises (and cloud) servers to AWS at the block level using lightweight agents. During a DR event, DRS launches fully functional EC2 instances from the replicated data within minutes. RPO is typically under 15 minutes (well within 1 hour). RTO is 15–30 minutes. DataSync handles file-level replication, not full server DR."},
+{d:"Resilient Architectures",t:"Route 53 Weighted Routing",q:"A company is performing a blue-green deployment at the DNS level. They want to shift 10% of production traffic to the new green environment for canary testing, while 90% continues to the blue environment. Which Route 53 routing policy achieves this?",o:["Failover routing with a 90/10 health check threshold","Latency-based routing with two records pointing to both environments","Weighted routing with weights of 90 for the blue record and 10 for the green record — Route 53 probabilistically routes requests proportional to the weight values","Geolocation routing that sends 10% of geographic regions to green"],a:2,e:"Route 53 Weighted routing assigns numeric weights to records. Traffic is distributed proportionally — with weights 90 and 10, approximately 90% goes to blue and 10% to green. Shifting weights gradually (e.g., 50/50, then 0/100) enables a controlled canary release at the DNS layer without changing infrastructure."},
+{d:"Resilient Architectures",t:"EventBridge Pipes",q:"An application writes events to an SQS queue. A downstream processor Lambda must be invoked for each event, but events from the same customer must be processed in order. The current Lambda SQS integration processes batches in parallel, causing out-of-order processing. What is the correct solution?",o:["Reduce Lambda concurrency to 1 so all batches are processed serially","Switch from SQS Standard to SQS FIFO with MessageGroupId set to customer ID, and use a Lambda event source mapping — FIFO queues process groups serially while allowing parallel processing across different customer groups","Add a DynamoDB table that tracks sequence numbers and have Lambda reorder events before processing","Use EventBridge Scheduler to invoke Lambda once per minute with the SQS queue backlog"],a:1,e:"SQS FIFO with MessageGroupId ensures messages from the same customer are processed in order within that group. Lambda's FIFO event source mapping processes each message group sequentially while processing different groups in parallel. Setting concurrency to 1 serializes everything globally, destroying throughput for unrelated customers."},
+{d:"Resilient Architectures",t:"API Gateway Resilience",q:"An API Gateway REST API is integrated with Lambda. During a traffic spike, the Lambda concurrency limit is hit and API Gateway returns 429 errors to clients. The product team wants clients to experience graceful degradation rather than hard errors. What should the architect configure?",o:["Increase Lambda reserved concurrency to match peak traffic","Enable API Gateway usage plans with throttling (requests per second + burst limits) to limit inbound rates before Lambda is hit, and configure a 429 response with a Retry-After header so clients back off gracefully","Deploy a CloudFront distribution in front of API Gateway to absorb traffic spikes","Use SQS as a buffer between API Gateway and Lambda so requests queue instead of failing"],a:1,e:"API Gateway usage plans enforce throttling at the API or method level, returning structured 429 responses before Lambda concurrency is exhausted. Clients receiving a 429 with Retry-After can implement backoff. API Gateway also has built-in account-level throttling. This is the correct API-level rate protection pattern."},
+{d:"Resilient Architectures",t:"Transit Gateway",q:"A company has 10 VPCs (production, staging, shared services, etc.) that need to communicate with each other and with an on-premises network via Direct Connect. They currently use a full mesh of 45 VPC peering connections which is becoming unmanageable. What simplifies this?",o:["Add more VPC peering connections but document them in a network diagram","Deploy AWS Transit Gateway — all VPCs and the Direct Connect gateway attach to the TGW, which acts as a hub routing traffic between all attachments, replacing the full mesh with a hub-and-spoke model","Use VPC sharing via Resource Access Manager to merge all VPCs into one","Deploy a third-party virtual router on EC2 with BGP peering to all VPCs"],a:1,e:"AWS Transit Gateway (TGW) is a regional hub that simplifies complex VPC topologies. Each VPC and Direct Connect gateway attaches once to the TGW. TGW routing tables control which attachments can communicate. 10 VPCs + 1 DX require 11 TGW attachments instead of 45+ peering connections. TGW also supports transitive routing, which VPC peering does not."},
+{d:"Resilient Architectures",t:"Service Quotas",q:"A company's data processing pipeline starts hitting AWS service limits (Lambda concurrency, DynamoDB write throughput). The platform team wants to be notified proactively when usage approaches 80% of any service quota before throttling occurs. What is the RECOMMENDED approach?",o:["Monitor CloudWatch metrics manually and check the Service Quotas console daily","Enable AWS Service Quotas integration with CloudWatch — Service Quotas can push quota utilization metrics to CloudWatch, and alarms can trigger SNS notifications when utilization exceeds defined thresholds","Use AWS Trusted Advisor to check service limits weekly","Create a Lambda function that calls the Service Quotas API hourly and sends alerts"],a:1,e:"AWS Service Quotas can publish utilization metrics to CloudWatch for supported services. CloudWatch alarms on these metrics trigger SNS notifications when thresholds are breached. This provides real-time proactive alerting. Trusted Advisor checks limits periodically but doesn't provide real-time CloudWatch integration."},
+{d:"Resilient Architectures",t:"S3 Replication Time Control",q:"A compliance regulation requires that all S3 objects created in us-east-1 are replicated to eu-central-1 within 15 minutes, and the company must have an SLA-backed guarantee — not just best-effort replication. What S3 feature provides this?",o:["Enable S3 Cross-Region Replication (CRR) — standard CRR replicates most objects within minutes","Enable S3 Replication Time Control (RTC) with CRR — RTC provides an SLA-backed guarantee that 99.99% of objects are replicated within 15 minutes, with replication metrics available in CloudWatch","Use EventBridge to trigger a Lambda that copies objects to the destination bucket on every PutObject event","Enable S3 Object Replication with Batch Replication for guaranteed timing"],a:1,e:"S3 Replication Time Control (RTC) adds an SLA-backed guarantee to CRR/SRR, ensuring 99.99% of objects are replicated within 15 minutes. It also enables S3 replication metrics in CloudWatch (bytes pending, operations pending, replication latency). Standard CRR is best-effort without a formal timing SLA."},
+{d:"Resilient Architectures",t:"Outposts",q:"A company runs a hospital management system that requires processing patient data with less than 1ms latency to local medical equipment. Regulations prohibit patient data from leaving the on-premises data center. They want to use AWS services for consistency with their cloud workloads. What AWS service addresses both latency and data residency requirements?",o:["AWS Local Zones — extend AWS infrastructure closer to specific cities","AWS Outposts — extends AWS infrastructure, services, and APIs to the customer's own on-premises data center, enabling AWS services to run locally with data never leaving the facility","AWS Direct Connect with a 100ms dedicated circuit to the nearest AWS region","AWS Wavelength — deploys AWS compute within telecom 5G networks"],a:1,e:"AWS Outposts installs AWS-managed rack infrastructure in the customer's data center. AWS services (EC2, EBS, RDS, ECS, EMR) run locally. Data never leaves the premises for latency-sensitive or residency-restricted workloads. Local Zones reduce latency to tens of milliseconds but data still resides in AWS infrastructure."},
+{d:"Resilient Architectures",t:"Backup Cross-Account",q:"A company wants to ensure that backups cannot be deleted by a ransomware attack that compromises the primary AWS account. What configuration protects backup data from account-level compromise?",o:["Enable versioning on the S3 bucket used by AWS Backup","Configure AWS Backup to copy recovery points to a separate, isolated AWS account with restricted access — even a full account compromise in the primary account cannot delete backups in the isolated backup account","Enable AWS Backup Vault Lock in Governance mode in the primary account","Encrypt backups with a KMS CMK so they cannot be deleted without the key"],a:1,e:"Cross-account backup copies are the gold standard for ransomware protection. The isolated backup account has strict SCPs limiting who can access or delete recovery points. Even root account compromise in the primary account cannot delete backups held in a separate, independently secured account. Governance mode can be bypassed by account admins."},
+{d:"Resilient Architectures",t:"Graceful Degradation",q:"A product recommendation service is a non-critical dependency for the main e-commerce checkout flow. When the recommendation service is overloaded or unavailable, the checkout page should still load — just without recommendations. How should this be architecturally implemented?",o:["Increase the recommendation service capacity until it never fails","Implement a timeout and fallback in the checkout service: if the recommendation API does not respond within 200ms, return an empty recommendation list and proceed with checkout — the circuit breaker opens on repeated failures","Use SQS to queue recommendation requests and process them asynchronously","Deploy the recommendation service with reserved Lambda concurrency so it never throttles"],a:1,e:"Graceful degradation via timeout + fallback is the correct pattern for non-critical dependencies. The checkout service sets an aggressive SLA (200ms) for the recommendation call. On timeout or error, it returns a default response and proceeds without blocking checkout. A circuit breaker prevents cascading failures by short-circuiting repeated calls to an unhealthy service."},
+// HIGH-PERFORMING ARCHITECTURES (16)
+{d:"High-Performing Architectures",t:"Graviton Compute",q:"A company runs a Java-based microservice fleet on m5.xlarge instances. AWS Compute Optimizer recommends migrating to m7g.xlarge (Graviton3). What change is required to the application?",o:["Rewrite the Java application in a compiled language optimized for ARM","Recompile Java source code for arm64 architecture","No application code changes are required — the JVM runs on Graviton arm64 transparently; update the launch template to use m7g instances and a Graviton-compatible AMI (Amazon Linux 2 or Ubuntu arm64)","Enable ARM compatibility mode in the JVM startup flags"],a:2,e:"The JVM is an interpreted runtime that abstracts the underlying hardware architecture. Java bytecode runs on Graviton arm64 without recompilation. The only changes needed are the EC2 instance type and an arm64-compatible AMI. Python, Node.js, Ruby, and other interpreted runtimes behave identically."},
+{d:"High-Performing Architectures",t:"ElastiCache Cluster Mode",q:"An ElastiCache for Redis cluster stores 500 GB of data. A single Redis node supports up to 300 GB of RAM. The data must be distributed across multiple nodes. Which Redis configuration supports this?",o:["ElastiCache for Redis with a Replication Group (single shard) and read replicas","ElastiCache for Redis with Cluster Mode Enabled — partitions data across up to 500 shards, each with its own primary and replicas, supporting far more than a single node's memory capacity","ElastiCache for Memcached with consistent hashing across nodes","ElastiCache for Redis with a larger r6g node class that supports 500 GB RAM"],a:1,e:"Redis Cluster Mode Enabled partitions the keyspace across multiple shards using hash slots. Each shard holds a portion of the data, aggregating to total capacities far exceeding any single node. Cluster Mode also provides horizontal write scaling. Without Cluster Mode, a Redis replication group has a single primary that must hold all data."},
+{d:"High-Performing Architectures",t:"Athena Federated Query",q:"An analyst team wants to run SQL queries that JOIN data from S3 (historical logs in Parquet format) with live operational data stored in an Aurora MySQL database — in a single query without ETL pipelines. What feature enables this?",o:["Export Aurora data to S3 nightly and query it alongside historical logs in Athena","Use Athena Federated Query with a Lambda-based data source connector for Aurora — Athena pushes down predicates to Aurora and joins the results with S3 data inline","Use AWS Glue to merge Aurora and S3 data into a unified S3 dataset before querying","Use Amazon Redshift Spectrum to connect Aurora as an external data source"],a:1,e:"Athena Federated Query uses Lambda-based connectors to query heterogeneous data sources (RDS, Aurora, DynamoDB, CloudWatch, etc.) alongside S3 data in a single SQL statement. Predicates are pushed down to the data source for efficiency. No ETL or data movement is required."},
+{d:"High-Performing Architectures",t:"CloudFront Functions",q:"A company needs to rewrite incoming URL paths (e.g., /old-path to /new-path) for every CloudFront request before it reaches the origin. The logic is simple string manipulation with sub-millisecond latency requirements. Which compute option has the LOWEST latency and cost for this use case?",o:["Lambda@Edge — runs Node.js/Python at CloudFront edge nodes","CloudFront Functions — ultra-lightweight JavaScript runtime executing at the CloudFront edge with sub-millisecond execution and ~6x lower cost than Lambda@Edge for simple request manipulation","An ALB listener rule with path-based routing and redirect actions","An EC2-based reverse proxy (Nginx) deployed in each region"],a:1,e:"CloudFront Functions run in the CloudFront network at every PoP with sub-millisecond execution times, purpose-built for simple request/response manipulation: URL rewrites, header modifications, and access control. They are significantly cheaper than Lambda@Edge and have no cold starts. Lambda@Edge is appropriate for more complex logic requiring longer execution time or Node.js/Python libraries."},
+{d:"High-Performing Architectures",t:"Kinesis Enhanced Fan-Out",q:"A Kinesis Data Stream has 10 shards. Four independent consumer applications each need to read all events at full throughput. With standard GetRecords polling, all consumers share the 2 MB/shard read limit, causing throttling. What resolves this?",o:["Increase the number of shards to 40 to distribute reads across more shards","Enable Enhanced Fan-Out for each consumer — each registered consumer gets a dedicated 2 MB/shard/consumer read throughput via HTTP/2 push, so 4 consumers each get 2 MB/s per shard without contention","Use Kinesis Data Firehose to fan out to four S3 destinations for each consumer","Deploy each consumer in a separate AWS account to isolate their read throughput"],a:1,e:"Enhanced Fan-Out allocates dedicated throughput per registered consumer. Each consumer registered with RegisterStreamConsumer gets its own 2 MB/shard/second read capacity via a push model (SubscribeToShard). 4 consumers on 10 shards = 4 × 10 × 2 MB/s = 80 MB/s total read throughput vs. 20 MB/s shared without EFO."},
+{d:"High-Performing Architectures",t:"DynamoDB Design",q:"A DynamoDB table has a partition key of 'status' with values PENDING, PROCESSING, COMPLETED. 95% of all write traffic goes to PENDING items. This is causing hot partition throttling. What redesign resolves this?",o:["Increase DynamoDB provisioned write capacity to handle the hot partition traffic","Add a random suffix to the partition key (e.g., PENDING_1, PENDING_2, ..., PENDING_10) to distribute writes across 10 partitions — write with a random suffix, read by scanning all suffixed variants","Create a GSI with 'status' as the sort key to distribute the load","Switch to DynamoDB on-demand capacity mode to auto-scale the hot partition"],a:1,e:"Hot partitions occur when many writes target the same partition key value. Write sharding adds a calculated suffix (e.g., random 1-10) to distribute writes across N logical partitions. Reads require querying all N suffix variants and merging results. On-demand capacity scales total throughput but cannot fix hot partition contention — each partition still has a per-partition throughput limit."},
+{d:"High-Performing Architectures",t:"Glue",q:"A data engineering team needs to run ETL jobs that transform JSON files in S3 into Parquet format for Athena queries, on a daily schedule, without managing any Spark infrastructure. Which AWS service provides fully managed serverless Spark ETL?",o:["Amazon EMR with auto-terminating clusters triggered by EventBridge","AWS Glue — provides serverless Spark ETL with auto-generated schema discovery (Crawlers), a visual ETL designer, and scheduled job triggers without any cluster management","AWS Batch with a containerized PySpark job","Amazon Kinesis Data Firehose with format conversion to Parquet enabled"],a:1,e:"AWS Glue is the fully serverless ETL service. Glue Crawlers infer schema from S3 data and populate the Glue Data Catalog. Glue ETL jobs run Spark without cluster provisioning or management. Jobs can be triggered on schedules or events. Kinesis Firehose can convert to Parquet but is designed for streaming, not batch ETL transformations."},
+{d:"High-Performing Architectures",t:"Lambda SnapStart",q:"A Java Lambda function used in an API has a 5-second cold start due to JVM initialization and Spring context loading. The team wants sub-100ms initialization without rewriting the application in another language. Which Lambda feature addresses this?",o:["Enable Lambda Provisioned Concurrency to keep instances warm","Enable Lambda SnapStart for Java — Lambda takes a snapshot of the initialized execution environment after the init phase and restores it on subsequent invocations, reducing cold start to under 1 second","Increase Lambda memory to 10,240 MB to speed up JVM initialization","Use Lambda container images instead of ZIP deployments for faster cold starts"],a:1,e:"Lambda SnapStart for Java (Corretto runtime) snapshots the initialized execution environment (post-init) and caches it. On cold start, Lambda restores from the snapshot instead of re-initializing the JVM and application framework, reducing cold start from seconds to under 1 second. Provisioned Concurrency also eliminates cold starts but costs more since warm environments are maintained permanently."},
+{d:"High-Performing Architectures",t:"API Gateway WebSocket",q:"A real-time collaborative document editing application requires the server to push updates to all connected clients within 100ms of any client making a change. HTTP polling every second is too slow. What API Gateway feature should the architect use?",o:["API Gateway REST API with aggressive client polling every 100ms","API Gateway HTTP API with server-sent events (SSE) for one-way server push","API Gateway WebSocket API — maintains persistent bidirectional connections; the backend can push messages to any connected client using the @connections management endpoint","CloudFront real-time logs pushed to connected clients via Lambda@Edge"],a:2,e:"API Gateway WebSocket APIs maintain persistent connections. When a client connects, the backend receives a connection ID. The backend can push messages to any connected client by POSTing to the @connections endpoint with the connection ID — without the client polling. This enables real-time sub-100ms server-to-client push."},
+{d:"High-Performing Architectures",t:"Timestream",q:"An IoT platform collects temperature, pressure, and humidity readings from 50,000 sensors every second. Each reading is a time-series data point. Analytics queries always filter by time range and sensor ID. Which AWS database is purpose-built for this use case?",o:["Amazon DynamoDB with a composite key of sensorId and timestamp","Amazon RDS PostgreSQL with a time-series extension (TimescaleDB)","Amazon Timestream — purpose-built time-series database that automatically tiers recent data to in-memory storage and older data to magnetic storage, with a SQL-like query engine optimized for time-range and sensor queries","Amazon Redshift with a TIMESTAMP sort key on the measurement table"],a:2,e:"Amazon Timestream is designed for time-series workloads. It automatically manages data tiering (recent data in memory, historical on SSD and magnetic), performs time-series-specific query optimizations (time range filtering, interpolation, smoothing), and scales to trillions of events per day. DynamoDB and RDS work but lack native time-series optimizations."},
+{d:"High-Performing Architectures",t:"Spot with EFA",q:"An HPC simulation requires MPI (Message Passing Interface) communication between 64 EC2 instances with microsecond-level inter-node latency. Standard Ethernet networking introduces too much latency. What EC2 networking feature is purpose-built for this?",o:["Enable enhanced networking (ENA) on all instances for higher bandwidth","Use Elastic Fabric Adapter (EFA) — a network interface that bypasses the OS kernel network stack for MPI and NCCL workloads, providing HPC-grade microsecond latency between instances in a Cluster Placement Group","Enable Jumbo Frames (MTU 9001) on all EC2 instances","Use an EFA-backed NLB between all 64 instances for traffic distribution"],a:1,e:"EFA (Elastic Fabric Adapter) provides OS-bypass networking using the libfabric API. MPI and NCCL workloads communicate directly between instances without OS kernel overhead, achieving microsecond latency. EFA must be combined with a Cluster Placement Group (same AZ, same rack) for minimum hop count. ENA provides enhanced bandwidth but still uses the kernel network stack."},
+{d:"High-Performing Architectures",t:"EMR on EKS",q:"A data platform team runs Apache Spark jobs on Amazon EMR. They also manage a Kubernetes-based microservices platform on Amazon EKS. They want to submit Spark jobs that run in their existing EKS cluster to consolidate infrastructure and improve resource utilization. What deployment mode enables this?",o:["Deploy a separate EMR cluster per Spark job using EMR Serverless","Use EMR on EKS — submits Spark jobs to an EKS cluster via virtual EMR clusters, enabling Spark workloads to share EKS compute with other containerized applications","Package Spark as a Docker container and run it as a Kubernetes CronJob on EKS","Use AWS Glue jobs which natively integrate with EKS clusters"],a:1,e:"EMR on EKS allows Spark workloads to run on an existing EKS cluster without a separate EMR cluster. Compute is shared with other EKS workloads, improving utilization. EMR manages the Spark runtime and job lifecycle while EKS manages the pods. This is the recommended approach for teams consolidating EMR and EKS infrastructure."},
+{d:"High-Performing Architectures",t:"Transfer Family",q:"A financial institution receives daily trade files from 50 counterparties via SFTP. Each counterparty has existing SFTP client software and cannot change protocols. Files land in an S3 bucket for downstream processing. What AWS service provides managed SFTP endpoints backed by S3?",o:["Deploy EC2 instances running OpenSSH with S3 FUSE mounts as SFTP endpoints","AWS Transfer Family — provides fully managed SFTP, FTPS, and FTP endpoints that store files directly to S3, with no servers to manage and per-counterparty user accounts","Use Amazon S3 Transfer Acceleration which supports SFTP connections","API Gateway with binary request body support can receive SFTP file uploads"],a:1,e:"AWS Transfer Family provides managed SFTP (and FTPS/FTP) endpoints. Files are stored directly to S3 with each transfer. Per-user SSH keys, service-managed authentication, or custom Lambda authentication are supported. No EC2 instances or SFTP software to manage. Counterparties connect to the AWS-provided SFTP endpoint without protocol changes."},
+{d:"High-Performing Architectures",t:"Bedrock",q:"A company wants to build an internal Q&A chatbot that answers questions about their proprietary technical documentation stored in S3. The chatbot must use a foundation model but only retrieve answers from the company's own documents, not general web knowledge. What is the MOST direct AWS-native approach?",o:["Fine-tune a Bedrock foundation model on the company's documentation","Use Amazon Bedrock Knowledge Bases — indexes the S3 documents into a vector store and performs RAG (Retrieval-Augmented Generation) to ground the foundation model's responses in the company's documentation only","Use AWS Kendra for document indexing and separately call a Bedrock model with the Kendra result as context","Deploy an open-source LLM on EC2 and build a custom RAG pipeline with OpenSearch"],a:1,e:"Amazon Bedrock Knowledge Bases provides a fully managed RAG pipeline. It chunks and embeds documents from S3 into a managed vector store (OpenSearch Serverless, Aurora, etc.), retrieves semantically relevant chunks for each query, and passes them as context to the chosen foundation model. This grounds responses in company documentation without fine-tuning."},
+{d:"High-Performing Architectures",t:"AppSync",q:"A mobile application requires a real-time data sync feature where changes made by one user are immediately pushed to all other users viewing the same data. The team wants to use GraphQL APIs. Which AWS service provides managed GraphQL with real-time subscriptions?",o:["API Gateway WebSocket with a custom GraphQL resolver on Lambda","AWS AppSync — managed GraphQL service with built-in real-time subscriptions (WebSocket-based), offline sync via Amplify, and direct DynamoDB/Lambda/OpenSearch resolver integrations","API Gateway REST API with SNS push notifications for real-time updates","Amazon Cognito with a custom WebSocket server on ECS for GraphQL subscriptions"],a:1,e:"AWS AppSync provides a managed GraphQL API with first-class support for real-time subscriptions via WebSocket. When a mutation (data change) occurs, all subscribed clients receive the update automatically. AppSync integrates directly with DynamoDB, Lambda, and other data sources as resolvers. Building this on API Gateway WebSocket requires significant custom infrastructure."},
+// COST-OPTIMIZED ARCHITECTURES (12)
+{d:"Cost-Optimized Architectures",t:"Compute Optimizer",q:"A company has 200 EC2 instances and wants to identify which instances are over-provisioned (wasting money) or under-provisioned (performance risk) based on actual CloudWatch metrics from the past 14 days. Which AWS service provides machine learning-based right-sizing recommendations?",o:["AWS Trusted Advisor — provides basic EC2 low utilization checks","AWS Compute Optimizer — analyzes CloudWatch metrics using ML to recommend optimal EC2 instance types and sizes for EC2, ECS, Lambda, and EBS volumes","AWS Cost Explorer right-sizing recommendations — provides basic instance size recommendations based on cost","AWS Systems Manager Inventory — collects instance metadata for capacity planning"],a:1,e:"AWS Compute Optimizer uses machine learning to analyze 14 days of CloudWatch metrics and recommends optimal resource configurations. It covers EC2 instances, ASGs, EBS volumes, Lambda functions, and ECS services on Fargate. Trusted Advisor checks low utilization thresholds (CPU < 10%) but doesn't provide ML-based alternative instance recommendations."},
+{d:"Cost-Optimized Architectures",t:"S3 Storage Lens",q:"A company has 500 S3 buckets across 20 AWS accounts totaling 3 PB of data. The storage team wants visibility into which buckets contain objects not accessed in 90+ days, which buckets have no lifecycle policies, and what the overall storage cost distribution looks like — across all accounts in one view. What provides this?",o:["Run AWS Cost Explorer filtered by S3 service across all accounts","Use S3 Storage Lens — provides organization-wide storage analytics with 30+ metrics including access patterns, cost efficiency scores, and policy adoption rates across all accounts and regions in a single dashboard","Enable S3 Inventory for each bucket and load reports into Athena","Use AWS Trusted Advisor to check S3 storage utilization"],a:1,e:"S3 Storage Lens delivers organization-wide storage analytics across all accounts and regions in a single dashboard. It surfaces metrics like objects not accessed in 90+ days, buckets without lifecycle policies, incomplete multipart uploads, and per-bucket cost breakdowns. It's the purpose-built tool for S3 cost governance at scale."},
+{d:"Cost-Optimized Architectures",t:"Reserved Instances Marketplace",q:"A company purchased 3-year Standard Reserved Instances for a workload that was subsequently migrated to containers on Fargate. The RIs have 18 months remaining and are now unused. What options does AWS provide?",o:["Contact AWS Support to cancel the reservation for a prorated refund","List the unused Standard Reserved Instances on the AWS Reserved Instance Marketplace — third parties can purchase them and the company recovers part of the remaining value","Convert them to Compute Savings Plans which can apply to Fargate","Modify the RIs to cover the Fargate tasks directly"],a:1,e:"Standard Reserved Instances can be listed on the RI Marketplace for third-party purchase. Sellers recover a portion of remaining value. Convertible RIs cannot be sold on the Marketplace. Note: Compute Savings Plans do cover Fargate, but you cannot convert Standard RIs to Savings Plans."},
+{d:"Cost-Optimized Architectures",t:"VPC Cost Optimization",q:"A company runs workloads in 3 AZs. Each AZ has its own NAT Gateway for HA. Private subnet resources in AZ-A frequently call S3, Secrets Manager, and SSM — all traffic routes through the NAT Gateway and incurs /bin/sh.045/GB data processing charges. Monthly NAT data charges are ,000. What eliminates the majority of these costs?",o:["Replace NAT Gateways with NAT instances for lower per-GB pricing","Deploy VPC Gateway Endpoints for S3 (free) and VPC Interface Endpoints for Secrets Manager and SSM — traffic to these services bypasses the NAT Gateway entirely, eliminating NAT data processing fees","Consolidate to one NAT Gateway shared across all AZs to reduce per-AZ fixed costs","Use S3 Transfer Acceleration to reduce the data volumes transferred"],a:1,e:"VPC Gateway Endpoints for S3 and DynamoDB are free and eliminate NAT data processing charges for S3 traffic. VPC Interface Endpoints for Secrets Manager and SSM have a small hourly cost (~/month per endpoint/AZ) but eliminate NAT data processing fees for all traffic to those services — providing significant net savings when volumes are high."},
+{d:"Cost-Optimized Architectures",t:"Spot Interruption Handling",q:"A company runs a long-running ML training job on Spot Instances. The job can tolerate interruptions if checkpoints are saved regularly. When EC2 notifies the instance of a Spot interruption (2-minute warning), the job must save a checkpoint and terminate gracefully. What is the correct mechanism to detect the interruption notice?",o:["Subscribe to an SNS topic for EC2 Spot interruption events","Poll the EC2 instance metadata endpoint (http://169.254.169.254/latest/meta-data/spot/interruption-action) at regular intervals; when a response is returned, begin checkpointing","Configure a CloudWatch alarm on the SpotInterruption metric","Use EventBridge to receive a Spot interruption event and invoke a Lambda that sends a signal to the instance"],a:1,e:"EC2 Spot instances receive a 2-minute interruption notice via the Instance Metadata Service (IMDS) at a well-known URL. The application polls this endpoint (e.g., every 5 seconds). When the endpoint returns a value, the application begins checkpointing and terminates gracefully. EventBridge also publishes Spot interruption events but the IMDS approach works from within the instance without additional configuration."},
+{d:"Cost-Optimized Architectures",t:"Cost Anomaly Detection",q:"A company has 50 AWS accounts and wants to be automatically alerted within 24 hours when any account's spending suddenly increases by more than 20% compared to the expected baseline — without manually monitoring Cost Explorer for each account. What service provides this?",o:["Configure AWS Budgets with a fixed monthly spend threshold alert for each account","Enable AWS Cost Anomaly Detection — it uses ML to learn each account's spending patterns and automatically alerts via SNS or email when anomalous cost increases are detected","Create CloudWatch billing alarms in each account with a 20% threshold","Use AWS Organizations consolidated billing to detect unusual spending across accounts"],a:1,e:"AWS Cost Anomaly Detection uses machine learning to establish expected cost baselines per service, account, or cost category and detects unusual spending patterns. It automatically adjusts baselines as patterns change and sends alerts when anomalies are detected. Budget alerts require a manually configured threshold and don't adapt to changing patterns."},
+{d:"Cost-Optimized Architectures",t:"Lightsail vs EC2",q:"A startup wants to host a simple WordPress blog. Expected traffic is low (< 5 req/sec). The team has no AWS infrastructure expertise and wants a predictable fixed monthly bill. Which service is MOST appropriate?",o:["Amazon EC2 t3.micro with Elastic IP, Security Groups, and separate RDS — full control but complex setup","Amazon Lightsail — provides virtual servers, storage, DNS, and networking in a simplified interface with fixed monthly pricing, pre-configured blueprints for WordPress, and no AWS infrastructure expertise required","AWS Lambda with a WordPress container image — pay only per request","Amazon ECS Fargate with an ALB — scalable container hosting for web applications"],a:1,e:"Amazon Lightsail is purpose-built for simpler workloads like WordPress blogs. It provides pre-configured WordPress blueprints, fixed monthly pricing (no surprise bills), built-in backups, and a simplified management console. EC2 + RDS is more capable but requires AWS expertise to configure securely and cost-effectively."}
+];;
+
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+var cur=0, ans=new Array(Q.length).fill(null), flagged=new Set(), checked=new Set();
+var secondsLeft=130*60, timerInt=null, submitted=false;
+
+// ─────────────────────────────────────────────
+//  TIMER
+// ─────────────────────────────────────────────
+function startTimer(){
+  timerInt=setInterval(function(){
+    if(secondsLeft<=0){clearInterval(timerInt);submitTest();return;}
+    secondsLeft--;
+    var h=Math.floor(secondsLeft/3600),m=Math.floor((secondsLeft%3600)/60),s=secondsLeft%60;
+    var el=document.getElementById('timer');
+    el.textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    if(secondsLeft<600)el.classList.add('warn');
+  },1000);
+}
+
+// ─────────────────────────────────────────────
+//  RENDER QUESTION
+// ─────────────────────────────────────────────
+function renderQ(i){
+  cur=i;
+  var q=Q[i];
+  document.getElementById('qdomain').textContent=q.d;
+  document.getElementById('qnum').textContent='Question '+(i+1)+' of '+Q.length+' \u2014 '+q.t;
+  document.getElementById('qtxt').textContent=q.q;
+  var letters=['A','B','C','D'], oc=document.getElementById('qopts');
+  oc.innerHTML='';
+  q.o.forEach(function(opt,j){
+    var div=document.createElement('div');
+    div.className='opt';
+    if(ans[i]===j) div.classList.add('sel');
+    if(checked.has(i)){
+      if(j===q.a) div.classList.add('cor');
+      else if(ans[i]===j && j!==q.a) div.classList.add('wrg');
+    }
+    div.innerHTML='<div class="oltr">'+letters[j]+'</div><div class="otxt">'+opt+'</div>';
+    if(!checked.has(i))(function(jj){div.onclick=function(){selectOpt(jj);};})(j);
+    oc.appendChild(div);
+  });
+  document.getElementById('qexptxt').textContent=q.e;
+  document.getElementById('qexp').className='exp'+(checked.has(i)?' show':'');
+  var cb=document.getElementById('chkb');
+  cb.disabled=ans[i]===null||checked.has(i);
+  cb.textContent=checked.has(i)?'\u2713 Checked':'Check Answer';
+  var fb=document.getElementById('flgb');
+  fb.className='btn btn-g flgb'+(flagged.has(i)?' on':'');
+  fb.textContent=flagged.has(i)?'\u2691 Flagged':'\u2691 Flag';
+  document.getElementById('prevb').disabled=i===0;
+  document.getElementById('nextb').textContent=i===Q.length-1?'Finish \u2192':'Next \u2192';
+  updateGrid(); updateStats();
+}
+
+function selectOpt(j){ans[cur]=j; renderQ(cur);}
+function checkAns(){if(ans[cur]===null)return; checked.add(cur); renderQ(cur);}
+function toggleFlag(){flagged.has(cur)?flagged.delete(cur):flagged.add(cur); renderQ(cur);}
+function nav(d){var n=cur+d; if(n<0||n>=Q.length)return; renderQ(n); window.scrollTo(0,0);}
+
+// ─────────────────────────────────────────────
+//  SIDEBAR
+// ─────────────────────────────────────────────
+function buildGrid(){
+  var g=document.getElementById('qgrid'); g.innerHTML='';
+  Q.forEach(function(_,i){
+    var b=document.createElement('button');
+    b.className='qb'; b.textContent=i+1;
+    (function(ii){b.onclick=function(){renderQ(ii);};})(i);
+    g.appendChild(b);
+  });
+}
+function updateGrid(){
+  document.querySelectorAll('.qb').forEach(function(b,i){
+    b.className='qb';
+    if(ans[i]!==null) b.classList.add('ans');
+    if(flagged.has(i)) b.classList.add('flg');
+    if(i===cur) b.classList.add('act');
+  });
+}
+function updateStats(){
+  document.getElementById('ac').textContent=ans.filter(function(a){return a!==null;}).length;
+  document.getElementById('fc').textContent=flagged.size;
+}
+
+// ─────────────────────────────────────────────
+//  SAVE / LOAD
+// ─────────────────────────────────────────────
+function save(){
+  localStorage.setItem('saa-c03-set3',JSON.stringify({ans:ans,flagged:[...flagged],checked:[...checked],cur:cur,secondsLeft:secondsLeft,at:new Date().toISOString()}));
+  var sb=document.getElementById('sb'); sb.classList.add('show');
+  setTimeout(function(){sb.classList.remove('show');},2200);
+}
+function load(){
+  var raw=localStorage.getItem('saa-c03-set3');
+  if(!raw){alert('No saved progress found.');return;}
+  var s=JSON.parse(raw);
+  ans=s.ans; flagged=new Set(s.flagged); checked=new Set(s.checked);
+  secondsLeft=s.secondsLeft||secondsLeft;
+  alert('Loaded! Saved at '+new Date(s.at).toLocaleString());
+  renderQ(s.cur||0);
+}
+
+// ─────────────────────────────────────────────
+//  SUBMIT
+// ─────────────────────────────────────────────
+function askSubmit(){
+  var u=ans.filter(function(a){return a===null;}).length;
+  if(u>0&&!confirm(u+' question(s) unanswered. Submit anyway?'))return;
+  submitTest();
+}
+
+function submitTest(){
+  if(submitted)return; submitted=true; clearInterval(timerInt);
+
+  // ── score calculations ──
+  var correct=ans.filter(function(a,i){return a===Q[i].a;}).length;
+  var pct=Math.round((correct/Q.length)*100);
+  var pass=pct>=72;
+
+  // domain breakdown
+  var domains={};
+  Q.forEach(function(q,i){
+    if(!domains[q.d])domains[q.d]={c:0,t:0};
+    domains[q.d].t++;
+    if(ans[i]===q.a)domains[q.d].c++;
+  });
+
+  // topic breakdown
+  var topics={};
+  Q.forEach(function(q,i){
+    if(!topics[q.t])topics[q.t]={c:0,t:0,d:q.d,wrong:[]};
+    topics[q.t].t++;
+    if(ans[i]===q.a) topics[q.t].c++;
+    else topics[q.t].wrong.push(i);
+  });
+
+  // missed questions list
+  var missed=[];
+  Q.forEach(function(q,i){
+    if(ans[i]!==null && ans[i]!==q.a){
+      missed.push({i:i,q:q,chosen:ans[i]});
+    }
+  });
+
+  // hide test UI
+  document.querySelector('.layout').style.display='none';
+  document.querySelector('header').style.display='none';
+
+  var rs=document.getElementById('rs');
+  rs.style.display='block';
+
+  // ── domain bars html ──
+  var domainColors={'Secure Architectures':'#00d4aa','Resilient Architectures':'#f5a623','High-Performing Architectures':'#7c83ff','Cost-Optimized Architectures':'#ff6b9d'};
+  var drows=Object.entries(domains).map(function(e){
+    var name=e[0],d=e[1],p=Math.round((d.c/d.t)*100);
+    var color=domainColors[name]||'var(--accent2)';
+    var tag=p>=80?'<span class="dtag strong">Strong</span>':p>=65?'<span class="dtag ok">Review</span>':'<span class="dtag weak">Weak</span>';
+    return '<div class="dr"><div class="dn">'+name+'</div><div class="dbw"><div class="dbb" style="width:'+p+'%;background:'+color+'"></div></div><div class="ds">'+d.c+'/'+d.t+' ('+p+'%)</div>'+tag+'</div>';
+  }).join('');
+
+  // ── weak topics html ──
+  var topicEntries=Object.entries(topics).sort(function(a,b){
+    var pa=a[1].c/a[1].t, pb=b[1].c/b[1].t; return pa-pb;
+  });
+  var weakTopics=topicEntries.filter(function(e){return e[1].c/e[1].t<0.7;}).slice(0,6);
+  var topicHtml='';
+  if(weakTopics.length===0){
+    topicHtml='<p style="color:var(--success);font-size:13px;">&#10003; No major topic weaknesses detected. Great performance across the board!</p>';
+  } else {
+    topicHtml=weakTopics.map(function(e){
+      var name=e[0],td=e[1],p=Math.round((td.c/td.t)*100);
+      var cls=p<50?'critical':'caution', scls=p<50?'critical':'caution';
+      var tips=getTopicTip(name);
+      return '<div class="topic-card '+cls+'"><div class="tc-header"><span class="tc-name">'+name+'</span><span class="tc-score '+scls+'">'+td.c+'/'+td.t+' ('+p+'%)</span></div><div class="tc-desc">'+tips+'</div></div>';
+    }).join('');
+  }
+
+  // ── missed questions html ──
+  var letters=['A','B','C','D'];
+  var missedHtml='';
+  if(missed.length===0){
+    missedHtml='<p style="color:var(--success);font-size:13px;">&#10003; You answered every attempted question correctly!</p>';
+  } else {
+    var showMissed=missed.slice(0,10);
+    missedHtml=showMissed.map(function(m){
+      return '<div class="missed-item"><div class="missed-meta"><span class="missed-qnum">Q'+(m.i+1)+'</span><span class="missed-domain">'+m.q.d+'</span><span class="missed-topic">'+m.q.t+'</span></div><div class="missed-q">'+m.q.q+'</div><div class="missed-answers"><span class="ans-wrong">&#10007; You chose: '+letters[m.chosen]+'. '+m.q.o[m.chosen]+'</span></div><div class="missed-answers" style="margin-top:4px;"><span class="ans-right">&#10003; Correct: '+letters[m.q.a]+'. '+m.q.o[m.q.a]+'</span></div></div>';
+    }).join('');
+    if(missed.length>10) missedHtml+='<p style="font-size:12px;color:var(--text-dim);text-align:center;margin-top:8px;">...and '+(missed.length-10)+' more. Use Review Answers to see all.</p>';
+  }
+
+  // ── study plan html ──
+  var studyPlan=buildStudyPlan(domains,topics,pct);
+
+  // ── overall feedback text ──
+  var feedbackHtml=buildFeedback(domains,topics,pct,pass,missed);
+
+  rs.innerHTML=
+    // SCORE HEADER
+    '<div class="rh">'+
+      '<div class="rtitle '+(pass?'pass':'fail')+'">'+(pass?'\u2713 PASS':'\u2717 FAIL')+'</div>'+
+      '<div class="rsub">SAA-C03 Practice Exam \u2014 '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'</div>'+
+      '<div class="sring"><div class="spct" style="color:'+(pass?'var(--success)':'var(--danger)')+'">'+pct+'%</div><div class="slbl">SCORE</div></div>'+
+    '</div>'+
+
+    // SCORE CARDS
+    '<div class="rgrid">'+
+      '<div class="rc"><div class="rcv" style="color:var(--success)">'+correct+'</div><div class="rcl">Correct</div></div>'+
+      '<div class="rc"><div class="rcv" style="color:var(--danger)">'+(Q.length-correct)+'</div><div class="rcl">Incorrect</div></div>'+
+      '<div class="rc"><div class="rcv" style="color:var(--accent)">'+Q.length+'</div><div class="rcl">Total Qs</div></div>'+
+      '<div class="rc"><div class="rcv" style="color:var(--accent2)">'+(pass?'PASS':'FAIL')+'</div><div class="rcl">Result \u226572%</div></div>'+
+    '</div>'+
+
+    // DOMAIN PERFORMANCE
+    '<div class="dbrk"><div class="section-title">Domain Performance</div>'+drows+'</div>'+
+
+    // AI FEEDBACK
+    '<div class="feedback-panel"><div class="section-title">Diagnostic Feedback</div>'+
+      '<div class="feedback-content">'+feedbackHtml+'</div>'+
+    '</div>'+
+
+    // WEAK TOPICS
+    '<div class="dbrk"><div class="section-title">Topic Weaknesses</div>'+
+      '<div class="topic-grid">'+topicHtml+'</div>'+
+    '</div>'+
+
+    // STUDY PLAN
+    '<div class="dbrk"><div class="section-title">Personalised Study Plan</div>'+
+      '<div class="study-plan">'+studyPlan+'</div>'+
+    '</div>'+
+
+    // MISSED QUESTIONS
+    '<div class="dbrk"><div class="section-title">Questions You Missed (Top 10)</div>'+
+      '<div class="missed-list">'+missedHtml+'</div>'+
+    '</div>'+
+
+    // ACTIONS
+    '<div class="ract">'+
+      '<button class="btn btn-p" onclick="reviewAnswers()">Review All Answers</button>'+
+      '<button class="btn btn-o" onclick="restart()">Restart Test</button>'+
+    '</div>';
+}
+
+// ─────────────────────────────────────────────
+//  TOPIC TIPS MAP
+// ─────────────────────────────────────────────
+var TIPS={
+  "S3 Security":"Review S3 Block Public Access, Bucket Policies, ACLs, and the difference between account-level vs bucket-level controls.",
+  "Organizations & SCPs":"Focus on how SCPs interact with IAM policies, the difference between Deny and Allow in SCPs, and inheritance through OU hierarchy.",
+  "DDoS & WAF":"Study AWS WAF rule types (rate-based, managed rule groups), Shield Standard vs Advanced, and how they attach to ALB/CloudFront.",
+  "IAM Roles & Credentials":"Revise IAM role trust policies, instance profiles, temporary credentials via STS, and why hard-coded keys are always wrong.",
+  "Secrets Manager":"Understand Secrets Manager vs Parameter Store, automatic rotation mechanics, and how consuming applications retrieve secrets.",
+  "Encryption in Transit":"Study TLS termination points, mTLS, ACM certificates, and the difference between in-transit and at-rest encryption.",
+  "S3 Object Lock":"Know the difference between Governance and Compliance mode, WORM requirements, and how Object Lock relates to Versioning.",
+  "Identity Federation":"Review SAML 2.0, OIDC, IAM Identity Center, AD Connector, and the difference between federation and IAM users.",
+  "CloudTrail & Audit":"Understand Organization Trails, log file validation, S3 MFA Delete, and how to detect tampering of audit logs.",
+  "Cross-Account Access":"Study STS AssumeRole, trust policies, external IDs for third-party roles, and the principle of least privilege across accounts.",
+  "CloudFront & OAC":"Revise Origin Access Control vs legacy OAI, signed URLs vs signed cookies, cache behaviours, and TTL configuration.",
+  "IaC Security":"Learn CloudFormation Hooks, AWS Config proactive checks, SCPs for preventive vs detective controls in IaC pipelines.",
+  "Cognito & Identity":"Study User Pools vs Identity Pools, token flows (OAuth/OIDC), and policy variables for fine-grained S3 access.",
+  "Security Hub & GuardDuty":"Understand the difference between GuardDuty (threat detection), Inspector (vulnerability scanning), Macie (data classification), and Security Hub (aggregation).",
+  "Session Manager":"Review SSM agent requirements, IAM permissions for Session Manager, session logging, and port-forwarding capability.",
+  "CloudHSM":"Understand FIPS 140-2 Level 2 (KMS) vs Level 3 (CloudHSM), shared vs dedicated HSM, and use cases for each.",
+  "VPC Endpoints":"Know Gateway Endpoints (S3, DynamoDB — free) vs Interface Endpoints (PrivateLink — charged), and when each is used.",
+  "SNS / SQS Fan-out":"Review the fan-out pattern, message filtering policies, SQS Standard vs FIFO, and when to use each combination.",
+  "RDS Multi-AZ":"Understand Multi-AZ vs Read Replicas — Multi-AZ is for HA/failover, Read Replicas are for read scaling. The standby does NOT serve reads.",
+  "Spot & SQS Resilience":"Study SQS visibility timeout mechanics, how it interacts with Spot interruptions, and the importance of idempotent consumers.",
+  "Multi-AZ Design":"Review the requirement to span all tiers across at least 2 AZs, Auto Scaling group configuration, and ALB health checks.",
+  "Decoupling Patterns":"Understand synchronous vs asynchronous coupling, SQS as a buffer, and the resilience benefits of loose coupling.",
+  "Cross-Region DR":"Revise RTO/RPO definitions, the spectrum of DR strategies (backup→pilot light→warm standby→active-active), and CRR mechanics.",
+  "Chaos Engineering":"Understand AWS FIS experiment templates, stop conditions, and the purpose of chaos engineering in building resilient systems.",
+  "Route 53 Failover":"Study Route 53 routing policies (failover, weighted, latency, geolocation), health checks, and alias vs non-alias records.",
+  "Stateless EC2 / Session State":"Review the principle of stateless EC2, ElastiCache for session storage, and why sticky sessions are an anti-pattern at scale.",
+  "SQS Dead Letter Queue":"Understand the redrive policy, maxReceiveCount, DLQ configuration, and how to replay messages from a DLQ.",
+  "Kinesis Ordering":"Study Kinesis partition keys, shard consumers, and how ordering is guaranteed within a shard but not across shards.",
+  "EC2 Auto Recovery":"Revise System vs Instance status checks, Auto Recovery vs Auto Scaling replacement, and what is preserved during recovery.",
+  "Storage Gateway":"Know the three Gateway types (File, Volume, Tape), File Gateway NFS/SMB interface, and the local cache mechanism.",
+  "S3 Lifecycle & Storage Classes":"Study all S3 storage classes, minimum storage durations, retrieval times, and how to design cost-optimal lifecycle transitions.",
+  "Kinesis Error Handling":"Review bisectBatchOnFunctionError, maximumRetryAttempts, failure destinations, and how to prevent shard blockage.",
+  "DynamoDB Global Tables":"Understand active-active vs active-passive replication, conflict resolution in Global Tables, and the difference from DynamoDB Streams replication.",
+  "Multi-Region Lambda":"Study Route 53 health checks with API Gateway, the trade-offs of Lambda@Edge vs multi-region deployments, and failover latency.",
+  "RDS Proxy":"Understand connection pooling, how RDS Proxy reduces database connection overhead, and its compatibility with Lambda.",
+  "CloudFront":"Revise CloudFront cache behaviours, TTL settings, invalidation, signed URLs, Lambda@Edge, and Origin Request Policies.",
+  "Redshift":"Study Redshift columnar storage, MPP architecture, Redshift Serverless, and when to use Redshift vs Athena vs RDS.",
+  "EFS vs EBS":"Know EFS (shared, NFS, multi-AZ) vs EBS (block, single-AZ, single-instance) vs S3 (object, durable), and when to use each.",
+  "RDS Read Replicas":"Understand that Multi-AZ standby CANNOT serve reads. Read Replicas are asynchronous and for read scaling, not HA.",
+  "ElastiCache":"Study Redis vs Memcached differences, cache-aside vs read-through patterns, TTL design, and cluster mode.",
+  "Placement Groups":"Know Cluster (low latency, same rack), Spread (fault isolation, different racks), and Partition (large distributed systems).",
+  "Kinesis Data Streams":"Study KDS shards, partition keys, retention, enhanced fan-out consumers, and when to use KDS vs SQS vs SNS.",
+  "DynamoDB Key Design":"Review partition key design, composite keys, GSIs vs LSIs, access pattern-driven design, and hot partition avoidance.",
+  "CloudFront API Caching":"Understand Cache-Control headers, CloudFront cache key configuration, and how to cache API responses safely.",
+  "EMR":"Know EMR vs Glue vs Athena use cases, EMR Serverless, instance fleet vs instance group, and when each is appropriate.",
+  "S3 Performance":"Study S3 request rate limits per prefix, randomised prefix strategy, S3 Transfer Acceleration, and multipart upload.",
+  "DAX":"Understand DAX as a read-through/write-through cache for DynamoDB, its SDK compatibility, and microsecond read latency.",
+  "Transcoding Pipeline":"Review Lambda timeout limits, SQS-triggered Auto Scaling patterns, and when Lambda is not the right compute choice.",
+  "GPU & Spot":"Know GPU instance families (P3, G4dn), Spot Fleet diversification, checkpointing strategies, and interruption handling.",
+  "Global Accelerator":"Understand Global Accelerator (Anycast IPs, TCP/UDP, non-HTTP) vs CloudFront (HTTP/S, caching) — they serve different use cases.",
+  "Savings Plans":"Study Compute vs EC2 Instance Savings Plans, Savings Plan vs Reserved Instances trade-offs, and commitment term effects.",
+  "Dev Environment Scheduling":"Review EventBridge scheduler, EC2 start/stop automation, and the cost impact of eliminating idle hours.",
+  "Lambda Cost Optimization":"Understand GB-seconds billing, Lambda Power Tuning, Provisioned Concurrency cost, and right-sizing strategies.",
+  "S3 Storage Tiers":"Memorise all S3 storage class costs, minimum storage durations, and retrieval times for the exam.",
+  "Direct Connect Egress":"Study Direct Connect pricing vs internet egress, hosted vs dedicated connections, and virtual interfaces.",
+  "ECS Fargate":"Understand Fargate vs EC2 launch type cost model, task sizing, and when Fargate is more cost-effective.",
+  "CloudFront S3 Cost":"Understand how CloudFront reduces S3 GET request costs for cacheable static content.",
+  "Aurora Serverless":"Study Aurora Serverless v1 vs v2 differences, ACU scaling increments, pause/resume, and variable workload cost savings.",
+  "Consolidated Billing":"Review how RI and Savings Plan sharing works across accounts in an Organization with consolidated billing.",
+  "NAT Gateway Cost":"Know Gateway Endpoint (free for S3/DynamoDB) vs NAT Gateway cost structure (hourly + data processing).",
+  "Spot for Transcoding":"Study Spot Fleet, capacity pools, diversification strategies, checkpointing, and Spot Instance interruption notices.",
+  "S3 Lifecycle Policy":"Know all S3 storage classes in order of cost, transition rules (minimum days), and how to match business retention requirements."
+};
+
+function getTopicTip(name){
+  return TIPS[name]||'Review the core AWS documentation and FAQs for this topic.';
+}
+
+// ─────────────────────────────────────────────
+//  BUILD FEEDBACK NARRATIVE
+// ─────────────────────────────────────────────
+function buildFeedback(domains,topics,pct,pass,missed){
+  var domArr=Object.entries(domains).map(function(e){return {name:e[0],pct:Math.round((e[1].c/e[1].t)*100),c:e[1].c,t:e[1].t};});
+  domArr.sort(function(a,b){return a.pct-b.pct;});
+  var weakDoms=domArr.filter(function(d){return d.pct<65;});
+  var strongDoms=domArr.filter(function(d){return d.pct>=80;});
+
+  var topicArr=Object.entries(topics).map(function(e){return {name:e[0],pct:Math.round((e[1].c/e[1].t)*100),d:e[1].d,wrong:e[1].wrong};});
+  topicArr.sort(function(a,b){return a.pct-b.pct;});
+  var critTopics=topicArr.filter(function(t){return t.pct<50;}).slice(0,3);
+  var cautTopics=topicArr.filter(function(t){return t.pct>=50&&t.pct<70;}).slice(0,4);
+
+  var html='';
+
+  // Overall verdict
+  html+='<h3>Overall Assessment</h3>';
+  if(pct>=85){
+    html+='<p>Excellent result. You scored <strong>'+pct+'%</strong> which comfortably exceeds the AWS passing threshold of ~72%. Your understanding of AWS solution architecture is strong across all four domains. Focus remaining effort on the specific topics flagged below to maximise your real exam margin.</p>';
+  } else if(pct>=72){
+    html+='<p>Good result — you scored <strong>'+pct+'%</strong> and would pass if this were the real exam. However, the margin above the ~72% threshold is '+( pct-72)+'%. A few shaky topics could tip the balance on exam day. Address the gaps below before booking your slot.</p>';
+  } else if(pct>=60){
+    html+='<p>You scored <strong>'+pct+'%</strong> — close but below the passing threshold. You have a solid foundation but specific domains and topics are dragging your score down. With focused study on the areas identified below, you should be ready within 2–3 weeks.</p>';
+  } else {
+    html+='<p>You scored <strong>'+pct+'%</strong>. There are foundational gaps across multiple domains. This is not a bad thing at this stage of preparation — it tells you exactly where to direct your energy. Work through the study plan below systematically before attempting the exam.</p>';
+  }
+
+  // Domain-level breakdown commentary
+  html+='<h3>Domain Analysis</h3>';
+  if(strongDoms.length>0){
+    var sNames=strongDoms.map(function(d){return '<span class="pill">'+d.name+' ('+d.pct+'%)</span>';}).join(' ');
+    html+='<p><strong>Strengths:</strong> '+sNames+' — These domains are solid. Maintain your knowledge here but prioritise time on weaker areas.</p>';
+  }
+  if(weakDoms.length>0){
+    weakDoms.forEach(function(d){
+      html+='<p><span class="pill red">'+d.name+' — '+d.pct+'%</span> ';
+      if(d.name==='Secure Architectures'){
+        html+='Secure Architectures carries the highest exam weight (30%). Gaps here have the biggest impact on your overall score. Focus on IAM, KMS, VPC security, and WAF/Shield scenarios.';
+      } else if(d.name==='Resilient Architectures'){
+        html+='Resilient Architectures (26% weight) tests your understanding of HA, fault tolerance, and decoupling patterns. Review Multi-AZ vs Multi-Region strategies and the SNS/SQS/Kinesis patterns.';
+      } else if(d.name==='High-Performing Architectures'){
+        html+='High-Performing Architectures (24% weight) requires knowing which caching, compute, and database service fits which scenario. Pay attention to CloudFront vs Global Accelerator and DAX vs ElastiCache distinctions.';
+      } else if(d.name==='Cost-Optimized Architectures'){
+        html+='Cost-Optimized Architectures (20% weight) focuses on choosing the right pricing model and storage tier. Practice matching workload characteristics (predictable, bursty, fault-tolerant) to the right pricing option.';
+      }
+      html+='</p>';
+    });
+  } else {
+    html+='<p>All domains are above the 65% threshold. Your knowledge is well-distributed. Focus on the specific topics below to eliminate remaining weaknesses.</p>';
+  }
+
+  // Critical topic failures
+  if(critTopics.length>0){
+    html+='<h3>Critical Gaps (Below 50%)</h3>';
+    html+='<p>These topics show the most significant knowledge gaps and should be your first priority:</p><ul>';
+    critTopics.forEach(function(t){
+      html+='<li><strong>'+t.name+'</strong> <span class="pill red">'+t.pct+'%</span> — '+getTopicTip(t.name)+'</li>';
+    });
+    html+='</ul>';
+  }
+
+  // Caution topics
+  if(cautTopics.length>0){
+    html+='<h3>Topics Needing Review (50–69%)</h3>';
+    html+='<ul>';
+    cautTopics.forEach(function(t){
+      html+='<li><strong>'+t.name+'</strong> <span class="pill yellow">'+t.pct+'%</span> — '+getTopicTip(t.name)+'</li>';
+    });
+    html+='</ul>';
+  }
+
+  // Common mistake patterns
+  if(missed.length>0){
+    html+='<h3>Common Mistake Patterns</h3>';
+    var multiAZmistake=missed.some(function(m){return m.q.t==='RDS Multi-AZ'||m.q.t==='RDS Read Replicas';});
+    var securitymistake=missed.filter(function(m){return m.q.d==='Secure Architectures';}).length>=3;
+    var costmistake=missed.filter(function(m){return m.q.d==='Cost-Optimized Architectures';}).length>=3;
+    if(multiAZmistake) html+='<p>&#x26A0; <strong>Multi-AZ vs Read Replicas confusion detected.</strong> Remember: Multi-AZ = high availability and failover (standby is NOT readable). Read Replicas = read scaling (asynchronous, can be promoted). These are the most commonly confused RDS concepts on the SAA exam.</p>';
+    if(securitymistake) html+='<p>&#x26A0; <strong>Security domain needs significant attention.</strong> With '+missed.filter(function(m){return m.q.d==='Secure Architectures';}).length+' security questions missed, revisit IAM fundamentals (roles vs users, trust policies), encryption patterns (KMS, CloudHSM), and VPC security layers (SGs, NACLs, endpoints).</p>';
+    if(costmistake) html+='<p>&#x26A0; <strong>Cost optimisation patterns need work.</strong> Focus on understanding the full spectrum from Spot → Savings Plans → Reserved Instances, and S3 storage class transition rules including minimum duration charges.</p>';
+    if(!multiAZmistake&&!securitymistake&&!costmistake) html+='<p>No strong mistake patterns detected across multiple questions in any single concept area. Review the individual missed questions above for targeted improvement.</p>';
+  }
+
+  // Exam readiness
+  html+='<h3>Exam Readiness</h3>';
+  if(pct>=80){
+    html+='<p>You are exam-ready. Book your slot within the next 1–2 weeks while the material is fresh. Do one more full practice test the day before to consolidate memory. Focus light review on your weak topics only.</p>';
+  } else if(pct>=72){
+    html+='<p>Almost there. Spend 1 week focused on the critical and caution topics above, then take another full practice test. Aim for 80%+ on your next attempt before booking the real exam — this gives you a comfortable buffer.</p>';
+  } else if(pct>=60){
+    html+='<p>Give yourself 2–3 weeks of targeted study. Work through AWS official documentation for the critical gap topics, then revisit the practice test. Do not book the exam until you consistently score 78%+ on practice tests.</p>';
+  } else {
+    html+='<p>Dedicate 4–6 weeks to structured study using the AWS SAA-C03 Exam Guide as your syllabus. Build hands-on experience with the services where you have gaps — the exam heavily rewards practical understanding over memorisation. Retake this test after 3 weeks to measure progress.</p>';
+  }
+
+  return html;
+}
+
+// ─────────────────────────────────────────────
+//  BUILD STUDY PLAN
+// ─────────────────────────────────────────────
+function buildStudyPlan(domains,topics,pct){
+  var cards=[];
+  var topicArr=Object.entries(topics).map(function(e){
+    return {name:e[0],pct:Math.round((e[1].c/e[1].t)*100),d:e[1].d};
+  }).sort(function(a,b){return a.pct-b.pct;});
+
+  var critical=topicArr.filter(function(t){return t.pct<50;}).slice(0,2);
+  var caution=topicArr.filter(function(t){return t.pct>=50&&t.pct<70;}).slice(0,2);
+  var review=topicArr.filter(function(t){return t.pct>=70&&t.pct<85;}).slice(0,2);
+
+  critical.forEach(function(t){
+    cards.push('<div class="sp-card"><div class="sp-priority high">&#9679; Priority 1 — Critical</div><div class="sp-title">'+t.name+'</div><div class="sp-body">'+getTopicTip(t.name)+'</div></div>');
+  });
+  caution.forEach(function(t){
+    cards.push('<div class="sp-card"><div class="sp-priority med">&#9679; Priority 2 — Review</div><div class="sp-title">'+t.name+'</div><div class="sp-body">'+getTopicTip(t.name)+'</div></div>');
+  });
+  review.forEach(function(t){
+    cards.push('<div class="sp-card"><div class="sp-priority low">&#9679; Priority 3 — Polish</div><div class="sp-title">'+t.name+'</div><div class="sp-body">'+getTopicTip(t.name)+'</div></div>');
+  });
+
+  if(cards.length===0){
+    cards.push('<div class="sp-card"><div class="sp-priority low">&#9679; All topics above 70%</div><div class="sp-title">Final Review</div><div class="sp-body">Take one more full-length timed practice test to consolidate memory under exam conditions. Focus on any remaining flagged questions.</div></div>');
+  }
+
+  // pad to 6 if needed
+  while(cards.length<3){
+    cards.push('<div class="sp-card"><div class="sp-priority low">&#9679; General</div><div class="sp-title">AWS Hands-On Practice</div><div class="sp-body">Build the services you\'re less familiar with in an AWS Free Tier account. Practical experience reinforces exam scenario reasoning.</div></div>');
+  }
+
+  return cards.slice(0,6).join('');
+}
+
+// ─────────────────────────────────────────────
+//  POST-SUBMIT ACTIONS
+// ─────────────────────────────────────────────
+function reviewAnswers(){
+  Q.forEach(function(_,i){if(ans[i]!==null)checked.add(i);});
+  document.getElementById('rs').style.display='none';
+  document.querySelector('.layout').style.display='grid';
+  document.querySelector('header').style.display='flex';
+  renderQ(0); window.scrollTo(0,0);
+}
+function restart(){
+  ans=new Array(Q.length).fill(null); flagged=new Set(); checked=new Set();
+  cur=0; secondsLeft=130*60; submitted=false;
+  document.getElementById('rs').style.display='none';
+  document.querySelector('.layout').style.display='grid';
+  document.querySelector('header').style.display='flex';
+  document.getElementById('timer').className='';
+  startTimer(); renderQ(0);
+}
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+buildGrid(); renderQ(0); startTimer();
+setInterval(save, 120000);
+</script>
+</body>
+</html>
+
+<!-- claude's fourth try -->
