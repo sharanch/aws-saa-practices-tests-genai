@@ -56,3 +56,7 @@ To suggest improvements, fix technical inaccuracies, or add new questions:
 
 ---
 *Disclaimer: These tests are intended for supplemental practice and are not official AWS certification materials.*
+---
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
