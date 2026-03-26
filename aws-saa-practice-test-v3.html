@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS SAA-C03 // ADVANCED SET</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e13;--surface:#111820;--surface2:#161e28;--border:#1e2d3d;
+  --accent:#f5a623;--accent2:#00d4aa;--danger:#ff4757;--success:#2ed573;
+  --warn:#ffa502;--text:#c9d1d9;--text-dim:#6e7f8e;--text-bright:#e6edf3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:2px;font-weight:700;}
+.logo span{color:var(--text-dim);font-weight:400;}
+.hstats{display:flex;gap:20px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.stat{color:var(--text-dim);}.stat strong{color:var(--accent2);font-size:13px;}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 57px);}
+aside{background:var(--surface);border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.stitle{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.qgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:16px;}
+.qb{aspect-ratio:1;background:#1a2533;border:1px solid var(--border);border-radius:3px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.qb:hover{border-color:var(--accent);color:var(--accent);}
+.qb.ans{background:#0d2b1e;border-color:var(--accent2);color:var(--accent2);}
+.qb.act{border-color:var(--accent);color:var(--accent);background:rgba(245,166,35,.1);}
+.qb.flg{border-color:var(--accent);background:rgba(245,166,35,.07);}
+
+/* MAIN CONTENT */
+main{padding:40px 60px;max-width:1000px;}
+.dlbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent2);text-transform:uppercase;margin-bottom:8px;}
+.qnum{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);margin-bottom:16px;}
+.qtxt{font-size:18px;font-weight:600;color:var(--text-bright);line-height:1.6;margin-bottom:30px;}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:30px;}
+.opt{display:flex;align-items:flex-start;gap:15px;padding:16px 20px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;}
+.opt:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04);}
+.opt.sel{border-color:var(--accent2);background:rgba(0,212,170,.07);}
+.opt.cor{border-color:var(--success);background:rgba(46,213,115,.08);}
+.opt.wrg{border-color:var(--danger);background:rgba(255,71,87,.08);}
+.oltr{width:28px;height:28px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--text-dim);flex-shrink:0;}
+.opt.sel .oltr{background:var(--accent2);color:#000;}
+
+.exp{background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.2);border-left:3px solid var(--accent2);border-radius:6px;padding:18px;margin-bottom:25px;display:none;}
+.exp.show{display:block;}
+.explbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent2);text-transform:uppercase;margin-bottom:8px;}
+
+/* BUTTONS */
+.btn{padding:10px 22px;border-radius:6px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .15s;}
+.btn-p{background:var(--accent);color:#000;}.btn-p:hover{background:#ffb740;}
+.btn-o{background:transparent;color:var(--text);border-color:var(--border);}.btn-o:hover{border-color:var(--text-dim);}
+.qact{display:flex;align-items:center;gap:12px;}
+.qnav{margin-left:auto;display:flex;gap:8px;}
+
+/* RESULTS */
+#rs{display:none;padding:50px;max-width:900px;margin:0 auto;}
+.rh{text-align:center;margin-bottom:40px;}
+.sring{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;border:4px solid var(--border);}
+.spct{font-size:38px;font-weight:800;font-family:'JetBrains Mono';}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:30px;}
+.rc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AWS <span>//</span> SAA-C03 <span>//</span> ADVANCED SET</div>
+  <div class="hstats">
+    <div class="stat">Answered: <strong id="ac">0</strong>/20</div>
+    <div class="stat">Flagged: <strong id="fc">0</strong></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="stitle">Question Map</div>
+    <div class="qgrid" id="qgrid"></div>
+    <div class="sact" style="margin-top:20px;">
+      <button class="btn btn-o" style="width:100%;font-size:11px;" onclick="submitTest()">Submit Exam</button>
+    </div>
+  </aside>
+
+  <main>
+    <div id="quiz-ui">
+      <div class="dlbl" id="qdomain"></div>
+      <div class="qnum" id="qnum"></div>
+      <div class="qtxt" id="qtxt"></div>
+      <div class="opts" id="qopts"></div>
+      
+      <div class="exp" id="qexp">
+        <div class="explbl">Technical Justification</div>
+        <div id="qexptxt" style="font-size:14px;line-height:1.6;"></div>
+      </div>
+
+      <div class="qact">
+        <button class="btn btn-o" id="flgb" onclick="toggleFlag()">Flag Question</button>
+        <button class="btn btn-o" id="chkb" onclick="checkAns()">Check Answer</button>
+        <div class="qnav">
+          <button class="btn btn-o" id="prevb" onclick="nav(-1)">Back</button>
+          <button class="btn btn-p" id="nextb" onclick="nav(1)">Next Question</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="rs">
+      <div class="rh">
+        <h1 id="v-title" style="font-size:42px;margin-bottom:10px;"></h1>
+        <div class="sring">
+          <div class="spct" id="v-pct">0%</div>
+          <div style="font-size:10px;color:var(--text-dim);">SCORE</div>
+        </div>
+      </div>
+      <div class="rgrid">
+        <div class="rc"><div id="v-cor" class="spct" style="color:var(--success);font-size:28px;">0</div><div style="font-size:10px;">CORRECT</div></div>
+        <div class="rc"><div id="v-inc" class="spct" style="color:var(--danger);font-size:28px;">0</div><div style="font-size:10px;">INCORRECT</div></div>
+        <div class="rc"><div id="v-res" class="spct" style="color:var(--accent2);font-size:28px;">-</div><div style="font-size:10px;">RESULT</div></div>
+      </div>
+      <button class="btn btn-p" style="width:100%;" onclick="location.reload()">Restart New Material</button>
+    </div>
+  </main>
+</div>
+
+<script>
+const Q = [
+    {d:"Design Resilient Architectures",t:"Data Migration",q:"A company needs to move 500 TB of data from on-premises to S3. Their internet bandwidth is 50 Mbps. What is the most time-efficient way to complete this migration?",o:["AWS DataSync","AWS Snowball Edge Storage Optimized","S3 Transfer Acceleration","Direct Connect 10 Gbps"],a:1,e:"At 50 Mbps, 500 TB would take months. Snowball Edge devices allow physical transport in days, making it the most efficient for one-time massive transfers."},
+    {d:"Design High-Performing Architectures",t:"Global Acceleration",q:"A gaming app uses UDP. Users in Asia report high latency to a us-east-1 endpoint. Which service provides the best global performance improvement?",o:["Amazon CloudFront","AWS Global Accelerator","Route 53 Geoproximity","Lambda@Edge"],a:1,e:"Global Accelerator uses Anycast IPs to route traffic over the AWS private network, supporting both TCP and UDP. CloudFront is for HTTP content caching."},
+    {d:"Design Secure Architectures",t:"Governance",q:"How can you ensure all S3 buckets in an AWS Organization always have 'Block Public Access' enabled across all accounts?",o:["IAM Permission Boundary","Service Control Policy (SCP)","AWS Config Rule","S3 Bucket Policy"],a:1,e:"SCPs allow you to set guardrails across an entire Organization, preventing even the root user from disabling critical security settings."},
+    {d:"Design Cost-Optimized Architectures",t:"Archival Storage",q:"Which storage class offers the lowest cost for 10 PB of data accessed once a year with a retrieval time of 12 hours?",o:["S3 Glacier Flexible Retrieval","S3 Glacier Deep Archive","S3 Standard-IA","S3 Intelligent-Tiering"],a:1,e:"Glacier Deep Archive is the lowest-cost storage in AWS (~$0.00099/GB), designed for long-term retention with 12-hour retrieval."},
+    {d:"Design Resilient Architectures",t:"Hybrid Storage",q:"A legacy app requires a shared file system supporting SMB and Active Directory integration. Which service is appropriate?",o:["Amazon EFS","Amazon FSx for Windows File Server","S3 File Gateway","FSx for Lustre"],a:1,e:"FSx for Windows File Server provides managed SMB storage with native AD integration. EFS only supports NFS for Linux."},
+    {d:"High-Performing Architectures",t:"In-Memory Caching",q:"Which solution provides microsecond latency for frequently accessed keys in a DynamoDB table?",o:["RDS Read Replicas","DynamoDB Accelerator (DAX)","ElastiCache for Memcached","Multi-AZ Deployment"],a:1,e:"DAX is a purpose-built in-memory cache for DynamoDB that reduces response times from milliseconds to microseconds."},
+    {d:"Design Secure Architectures",t:"EC2 Security",q:"What is the best practice for an EC2 instance to securely access KMS for decryption?",o:["Hardcode Access Keys","Use IAM Roles for EC2","IAM User in config file","SSM Parameter Store with keys"],a:1,e:"IAM Roles for EC2 provide temporary, automatically rotated credentials via IMDS, removing the risk of long-term credential leakage."},
+    {d:"Design Resilient Architectures",t:"Messaging Scale",q:"You need to process 1 million small messages per second. Ordering is not required. Which service is best?",o:["SQS FIFO","SQS Standard","Amazon SNS","Amazon MQ"],a:1,e:"SQS Standard offers near-unlimited throughput. FIFO is limited to 3,000 requests per second with batching."},
+    {d:"High-Performing Architectures",t:"HPC Networking",q:"Which feature provides 100 Gbps network bandwidth and low-latency inter-node communication for HPC tasks?",o:["Elastic Fabric Adapter (EFA)","Enhanced Networking (ENA)","Cluster Placement Group","VPC Endpoints"],a:0,e:"EFA is a network interface for EC2 that bypasses the OS kernel to provide high-level inter-node communications for HPC and ML."},
+    {d:"Design Cost-Optimized Architectures",t:"DynamoDB Pricing",q:"A serverless app has high usage during the day and zero at night. Which DynamoDB model is most cost-effective?",o:["Provisioned Capacity","On-Demand Capacity","Reserved Capacity","Savings Plans"],a:1,e:"On-Demand capacity pricing ensures you only pay for the actual requests made, which is ideal for bursty or idle-heavy workloads."},
+    {d:"Design Secure Architectures",t:"Private Access",q:"How can a private EC2 instance access S3 without using a NAT Gateway or public internet?",o:["Interface VPC Endpoint","Gateway VPC Endpoint","Egress-only IGW","Transit Gateway"],a:1,e:"Gateway VPC Endpoints for S3 allow private communication within the AWS network at no additional cost."},
+    {d:"Design Resilient Architectures",t:"Database Scaling",q:"What should you add to handle thousands of concurrent Lambda connections to an Aurora database?",o:["Read Replica","Amazon RDS Proxy","Larger DB Instance","Aurora Serverless v2"],a:1,e:"RDS Proxy pools established database connections, preventing the overhead of thousands of simultaneous Lambda handshakes."},
+    {d:"High-Performing Architectures",t:"ALB Routing",q:"Which ALB feature allows routing traffic to different backends based on the URL path (/app vs /api)?",o:["Host-based routing","Path-based routing","Target Groups","SNI"],a:1,e:"Path-based routing allows the ALB to direct requests to specific Target Groups based on the path in the HTTP header."},
+    {d:"Design Secure Architectures",t:"Automated Reasoning",q:"Which service uses mathematical logic to identify unintended public access to S3 buckets?",o:["GuardDuty","IAM Access Analyzer","Inspector","Security Hub"],a:1,e:"IAM Access Analyzer uses provable security and automated reasoning to identify resource policies that grant public access."},
+    {d:"Cost-Optimized Architectures",t:"Container Pricing",q:"Which compute option is most cost-effective for fault-tolerant, interruptible ECS tasks?",o:["Fargate On-Demand","Fargate Spot","EC2 Reserved","Savings Plans"],a:1,e:"Fargate Spot provides up to 70% savings for ECS tasks that can handle potential interruptions."},
+    {d:"Design Resilient Architectures",t:"DNS Reliability",q:"Which AWS service provides a 100% Availability SLA?",o:["Route 53","ALB","CloudFront","Global Accelerator"],a:0,e:"Amazon Route 53 is globally distributed and is one of the few services offering a 100% uptime SLA."},
+    {d:"High-Performing Architectures",t:"Data Warehousing",q:"Which service is designed for complex analytical queries on petabytes of structured data?",o:["Amazon RDS","Amazon Redshift","DynamoDB","ElastiCache"],a:1,e:"Redshift is a columnar MPP data warehouse optimized for large-scale analytical workloads."},
+    {d:"Design Secure Architectures",t:"Certificate Management",q:"Which service provides managed SSL/TLS certificates with automated renewal for ALBs?",o:["AWS KMS","AWS Certificate Manager (ACM)","IAM Store","CloudHSM"],a:1,e:"ACM manages the lifecycle and automated renewal of public SSL certificates for integrated services like ALB and CloudFront."},
+    {d:"Design Cost-Optimized Architectures",t:"Budgeting",q:"Which service allows you to set alerts if forecasted AWS spending exceeds a specific threshold?",o:["Cost Explorer","AWS Budgets","Cost and Usage Report","Trusted Advisor"],a:1,e:"AWS Budgets lets you set custom thresholds for actual or forecasted costs and sends alerts when they are crossed."},
+    {d:"High-Performing Architectures",t:"Streaming Data",q:"A company needs to ingest real-time video from millions of mobile devices. Which service is best?",o:["Kinesis Data Streams","Kinesis Video Streams","Firehose","SQS"],a:1,e:"Kinesis Video Streams is specifically built to securely ingest and store video data for analytics and playback."}
+];
+
+let cur=0, ans=new Array(Q.length).fill(null), flagged=new Set(), checked=new Set();
+
+function render(){
+  const q=Q[cur];
+  document.getElementById('qdomain').innerText=q.d;
+  document.getElementById('qnum').innerText=`Question ${cur+1} of ${Q.length} — ${q.t}`;
+  document.getElementById('qtxt').innerText=q.q;
+  
+  const cont=document.getElementById('qopts'); cont.innerHTML='';
+  q.o.forEach((opt,i)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    if(ans[cur]===i) d.classList.add('sel');
+    if(checked.has(cur)){
+        if(i===q.a) d.classList.add('cor');
+        else if(ans[cur]===i) d.classList.add('wrg');
+    }
+    d.innerHTML=`<div class="oltr">${String.fromCharCode(65+i)}</div><div class="otxt">${opt}</div>`;
+    if(!checked.has(cur)) d.onclick=()=>select(i);
+    cont.appendChild(d);
+  });
+
+  document.getElementById('qexp').className='exp'+(checked.has(cur)?' show':'');
+  document.getElementById('qexptxt').innerText=q.e;
+  document.getElementById('chkb').style.display=checked.has(cur)?'none':'block';
+  document.getElementById('chkb').disabled=ans[cur]===null;
+  document.getElementById('flgb').innerText=flagged.has(cur)?'Flagged':'Flag Question';
+  document.getElementById('prevb').disabled=cur===0;
+  document.getElementById('nextb').innerText=cur===Q.length-1?'Finish':'Next Question';
+  updateSidebar();
+}
+
+function select(i){ans[cur]=i; render();}
+function checkAns(){checked.add(cur); render();}
+function toggleFlag(){flagged.has(cur)?flagged.delete(cur):flagged.add(cur); render();}
+function nav(dir){
+  if(cur===Q.length-1 && dir===1){submitTest();return;}
+  cur+=dir; render();
+}
+
+function buildSidebar(){
+  const g=document.getElementById('qgrid'); g.innerHTML='';
+  Q.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.className='qb'; b.innerText=i+1;
+    b.onclick=()=>{cur=i;render();};
+    g.appendChild(b);
+  });
+}
+
+function updateSidebar(){
+  document.querySelectorAll('.qb').forEach((b,i)=>{
+    b.className='qb';
+    if(ans[i]!==null) b.classList.add('ans');
+    if(flagged.has(i)) b.classList.add('flg');
+    if(i===cur) b.classList.add('act');
+  });
+  document.getElementById('ac').innerText=ans.filter(a=>a!==null).length;
+  document.getElementById('fc').innerText=flagged.size;
+}
+
+function submitTest(){
+  const score=ans.filter((a,i)=>a===Q[i].a).length;
+  const pct=Math.round((score/Q.length)*100);
+  document.getElementById('quiz-ui').style.display='none';
+  document.getElementById('rs').style.display='block';
+  document.getElementById('v-pct').innerText=pct+'%';
+  document.getElementById('v-cor').innerText=score;
+  document.getElementById('v-inc').innerText=Q.length-score;
+  document.getElementById('v-title').innerText=pct>=72?'PASSED':'FAILED';
+  document.getElementById('v-res').innerText=pct>=72?'READY':'REVIEW';
+}
+
+buildSidebar(); render();
+</script>
+</body>
+</html>

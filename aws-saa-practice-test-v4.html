@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS SAA-C03 // FULL PRACTICE EXAM</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e13;--surface:#111820;--surface2:#161e28;--border:#1e2d3d;
+  --accent:#f5a623;--accent2:#00d4aa;--danger:#ff4757;--success:#2ed573;
+  --warn:#ffa502;--text:#c9d1d9;--text-dim:#6e7f8e;--text-bright:#e6edf3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:2px;font-weight:700;}
+.logo span{color:var(--text-dim);font-weight:400;}
+.hstats{display:flex;gap:20px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.stat{color:var(--text-dim);}.stat strong{color:var(--accent2);font-size:13px;}
+#timer{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--accent);background:rgba(245,166,35,.08);padding:5px 12px;border:1px solid rgba(245,166,35,.25);border-radius:4px;letter-spacing:2px;}
+#timer.warn{color:var(--danger);border-color:rgba(255,71,87,.4);background:rgba(255,71,87,.08);}
+
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 57px);}
+aside{background:var(--surface);border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;}
+.stitle{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.qgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:16px;}
+.qb{aspect-ratio:1;background:#1a2533;border:1px solid var(--border);border-radius:3px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.qb:hover{border-color:var(--accent);color:var(--accent);}
+.qb.ans{background:#0d2b1e;border-color:var(--accent2);color:var(--accent2);}
+.qb.act{border-color:var(--accent);color:var(--accent);background:rgba(245,166,35,.1);}
+.qb.flg{border-color:var(--accent);background:rgba(245,166,35,.07);}
+
+main{padding:40px 60px;max-width:1000px;}
+.dlbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent2);text-transform:uppercase;margin-bottom:8px;}
+.qnum{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);margin-bottom:16px;}
+.qtxt{font-size:18px;font-weight:600;color:var(--text-bright);line-height:1.6;margin-bottom:30px;}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:30px;}
+.opt{display:flex;align-items:flex-start;gap:15px;padding:16px 20px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;}
+.opt:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04);}
+.opt.sel{border-color:var(--accent2);background:rgba(0,212,170,.07);}
+.opt.cor{border-color:var(--success);background:rgba(46,213,115,.08);}
+.opt.wrg{border-color:var(--danger);background:rgba(255,71,87,.08);}
+.oltr{width:28px;height:28px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--text-dim);flex-shrink:0;}
+.opt.sel .oltr{background:var(--accent2);color:#000;}
+
+.exp{background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.2);border-left:3px solid var(--accent2);border-radius:6px;padding:18px;margin-bottom:25px;display:none;}
+.exp.show{display:block;}
+.explbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent2);text-transform:uppercase;margin-bottom:8px;}
+
+.btn{padding:10px 22px;border-radius:6px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .15s;}
+.btn-p{background:var(--accent);color:#000;}.btn-p:hover{background:#ffb740;}
+.btn-o{background:transparent;color:var(--text);border-color:var(--border);}.btn-o:hover{border-color:var(--text-dim);}
+.qact{display:flex;align-items:center;gap:12px;}
+.qnav{margin-left:auto;display:flex;gap:8px;}
+
+#rs{display:none;padding:50px;max-width:900px;margin:0 auto;}
+.rh{text-align:center;margin-bottom:40px;}
+.sring{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;border:4px solid var(--border);}
+.spct{font-size:38px;font-weight:800;font-family:'JetBrains Mono';}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:30px;}
+.rc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AWS <span>//</span> SAA-C03 <span>//</span> FULL EXAM</div>
+  <div class="hstats">
+    <div class="stat">Answered: <strong id="ac">0</strong>/65</div>
+    <div class="stat">Flagged: <strong id="fc">0</strong></div>
+    <div id="timer">02:10:00</div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="stitle">Question Map</div>
+    <div class="qgrid" id="qgrid"></div>
+    <div class="sact" style="margin-top:20px;">
+      <button class="btn btn-o" style="width:100%;font-size:11px;" onclick="askSubmit()">Submit Exam</button>
+    </div>
+  </aside>
+
+  <main>
+    <div id="quiz-ui">
+      <div class="dlbl" id="qdomain"></div>
+      <div class="qnum" id="qnum"></div>
+      <div class="qtxt" id="qtxt"></div>
+      <div class="opts" id="qopts"></div>
+      
+      <div class="exp" id="qexp">
+        <div class="explbl">Technical Justification</div>
+        <div id="qexptxt" style="font-size:14px;line-height:1.6;"></div>
+      </div>
+
+      <div class="qact">
+        <button class="btn btn-o" id="flgb" onclick="toggleFlag()">Flag Question</button>
+        <button class="btn btn-o" id="chkb" onclick="checkAns()">Check Answer</button>
+        <div class="qnav">
+          <button class="btn btn-o" id="prevb" onclick="nav(-1)">Back</button>
+          <button class="btn btn-p" id="nextb" onclick="nav(1)">Next Question</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="rs">
+      <div class="rh">
+        <h1 id="v-title" style="font-size:42px;margin-bottom:10px;"></h1>
+        <div class="sring">
+          <div class="spct" id="v-pct">0%</div>
+          <div style="font-size:10px;color:var(--text-dim);">SCORE</div>
+        </div>
+      </div>
+      <div class="rgrid">
+        <div class="rc"><div id="v-cor" class="spct" style="color:var(--success);font-size:28px;">0</div><div style="font-size:10px;">CORRECT</div></div>
+        <div class="rc"><div id="v-inc" class="spct" style="color:var(--danger);font-size:28px;">0</div><div style="font-size:10px;">INCORRECT</div></div>
+        <div class="rc"><div id="v-res" class="spct" style="color:var(--accent2);font-size:28px;">-</div><div style="font-size:10px;">RESULT</div></div>
+      </div>
+      <button class="btn btn-p" style="width:100%;" onclick="location.reload()">Restart Exam</button>
+    </div>
+  </main>
+</div>
+
+<script>
+// NOTE: I am populating 65 questions by combining your existing pool with new scenarios
+const Q = [
+    // 1-20 (from previous interaction)
+    {d:"Design Resilient Architectures",t:"Data Migration",q:"A company needs to move 500 TB of data from on-premises to S3. Their internet bandwidth is 50 Mbps. What is the most time-efficient way to complete this migration?",o:["AWS DataSync","AWS Snowball Edge Storage Optimized","S3 Transfer Acceleration","Direct Connect 10 Gbps"],a:1,e:"At 50 Mbps, 500 TB would take months. Snowball Edge devices allow physical transport in days, making it the most efficient for one-time massive transfers."},
+    {d:"Design High-Performing Architectures",t:"Global Acceleration",q:"A gaming app uses UDP. Users in Asia report high latency to a us-east-1 endpoint. Which service provides the best global performance improvement?",o:["Amazon CloudFront","AWS Global Accelerator","Route 53 Geoproximity","Lambda@Edge"],a:1,e:"Global Accelerator uses Anycast IPs to route traffic over the AWS private network, supporting both TCP and UDP. CloudFront is for HTTP content caching."},
+    {d:"Design Secure Architectures",t:"Governance",q:"How can you ensure all S3 buckets in an AWS Organization always have 'Block Public Access' enabled across all accounts?",o:["IAM Permission Boundary","Service Control Policy (SCP)","AWS Config Rule","S3 Bucket Policy"],a:1,e:"SCPs allow you to set guardrails across an entire Organization, preventing even the root user from disabling critical security settings."},
+    {d:"Design Cost-Optimized Architectures",t:"Archival Storage",q:"Which storage class offers the lowest cost for 10 PB of data accessed once a year with a retrieval time of 12 hours?",o:["S3 Glacier Flexible Retrieval","S3 Glacier Deep Archive","S3 Standard-IA","S3 Intelligent-Tiering"],a:1,e:"Glacier Deep Archive is the lowest-cost storage in AWS (~$0.00099/GB), designed for long-term retention with 12-hour retrieval."},
+    {d:"Design Resilient Architectures",t:"Hybrid Storage",q:"A legacy app requires a shared file system supporting SMB and Active Directory integration. Which service is appropriate?",o:["Amazon EFS","Amazon FSx for Windows File Server","S3 File Gateway","FSx for Lustre"],a:1,e:"FSx for Windows File Server provides managed SMB storage with native AD integration. EFS only supports NFS for Linux."},
+    {d:"High-Performing Architectures",t:"In-Memory Caching",q:"Which solution provides microsecond latency for frequently accessed keys in a DynamoDB table?",o:["RDS Read Replicas","DynamoDB Accelerator (DAX)","ElastiCache for Memcached","Multi-AZ Deployment"],a:1,e:"DAX is a purpose-built in-memory cache for DynamoDB that reduces response times from milliseconds to microseconds."},
+    {d:"Design Secure Architectures",t:"EC2 Security",q:"What is the best practice for an EC2 instance to securely access KMS for decryption?",o:["Hardcode Access Keys","Use IAM Roles for EC2","IAM User in config file","SSM Parameter Store with keys"],a:1,e:"IAM Roles for EC2 provide temporary, automatically rotated credentials via IMDS, removing the risk of long-term credential leakage."},
+    {d:"Design Resilient Architectures",t:"Messaging Scale",q:"You need to process 1 million small messages per second. Ordering is not required. Which service is best?",o:["SQS FIFO","SQS Standard","Amazon SNS","Amazon MQ"],a:1,e:"SQS Standard offers near-unlimited throughput. FIFO is limited to 3,000 requests per second with batching."},
+    {d:"High-Performing Architectures",t:"HPC Networking",q:"Which feature provides 100 Gbps network bandwidth and low-latency inter-node communication for HPC tasks?",o:["Elastic Fabric Adapter (EFA)","Enhanced Networking (ENA)","Cluster Placement Group","VPC Endpoints"],a:0,e:"EFA is a network interface for EC2 that bypasses the OS kernel to provide high-level inter-node communications for HPC and ML."},
+    {d:"Design Cost-Optimized Architectures",t:"DynamoDB Pricing",q:"A serverless app has high usage during the day and zero at night. Which DynamoDB model is most cost-effective?",o:["Provisioned Capacity","On-Demand Capacity","Reserved Capacity","Savings Plans"],a:1,e:"On-Demand capacity pricing ensures you only pay for the actual requests made, which is ideal for bursty or idle-heavy workloads."},
+    {d:"Design Secure Architectures",t:"Private Access",q:"How can a private EC2 instance access S3 without using a NAT Gateway or public internet?",o:["Interface VPC Endpoint","Gateway VPC Endpoint","Egress-only IGW","Transit Gateway"],a:1,e:"Gateway VPC Endpoints for S3 allow private communication within the AWS network at no additional cost."},
+    {d:"Design Resilient Architectures",t:"Database Scaling",q:"What should you add to handle thousands of concurrent Lambda connections to an Aurora database?",o:["Read Replica","Amazon RDS Proxy","Larger DB Instance","Aurora Serverless v2"],a:1,e:"RDS Proxy pools established database connections, preventing the overhead of thousands of simultaneous Lambda handshakes."},
+    {d:"High-Performing Architectures",t:"ALB Routing",q:"Which ALB feature allows routing traffic to different backends based on the URL path (/app vs /api)?",o:["Host-based routing","Path-based routing","Target Groups","SNI"],a:1,e:"Path-based routing allows the ALB to direct requests to specific Target Groups based on the path in the HTTP header."},
+    {d:"Design Secure Architectures",t:"Automated Reasoning",q:"Which service uses mathematical logic to identify unintended public access to S3 buckets?",o:["GuardDuty","IAM Access Analyzer","Inspector","Security Hub"],a:1,e:"IAM Access Analyzer uses provable security and automated reasoning to identify resource policies that grant public access."},
+    {d:"Cost-Optimized Architectures",t:"Container Pricing",q:"Which compute option is most cost-effective for fault-tolerant, interruptible ECS tasks?",o:["Fargate On-Demand","Fargate Spot","EC2 Reserved","Savings Plans"],a:1,e:"Fargate Spot provides up to 70% savings for ECS tasks that can handle potential interruptions."},
+    {d:"Design Resilient Architectures",t:"DNS Reliability",q:"Which AWS service provides a 100% Availability SLA?",o:["Route 53","ALB","CloudFront","Global Accelerator"],a:0,e:"Amazon Route 53 is globally distributed and is one of the few services offering a 100% uptime SLA."},
+    {d:"High-Performing Architectures",t:"Data Warehousing",q:"Which service is designed for complex analytical queries on petabytes of structured data?",o:["Amazon RDS","Amazon Redshift","DynamoDB","ElastiCache"],a:1,e:"Redshift is a columnar MPP data warehouse optimized for large-scale analytical workloads."},
+    {d:"Design Secure Architectures",t:"Certificate Management",q:"Which service provides managed SSL/TLS certificates with automated renewal for ALBs?",o:["AWS KMS","AWS Certificate Manager (ACM)","IAM Store","CloudHSM"],a:1,e:"ACM manages the lifecycle and automated renewal of public SSL certificates for integrated services like ALB and CloudFront."},
+    {d:"Design Cost-Optimized Architectures",t:"Budgeting",q:"Which service allows you to set alerts if forecasted AWS spending exceeds a specific threshold?",o:["Cost Explorer","AWS Budgets","Cost and Usage Report","Trusted Advisor"],a:1,e:"AWS Budgets lets you set custom thresholds for actual or forecasted costs and sends alerts when they are crossed."},
+    {d:"High-Performing Architectures",t:"Streaming Data",q:"A company needs to ingest real-time video from millions of mobile devices. Which service is best?",o:["Kinesis Data Streams","Kinesis Video Streams","Firehose","SQS"],a:1,e:"Kinesis Video Streams is specifically built to securely ingest and store video data for analytics and playback."},
+    
+    // Generating questions 21-65 to complete the set
+    {d:"Design Secure Architectures",t:"Secrets Management",q:"A Lambda function needs a password for an RDS database. The password must be rotated every 30 days without code changes. What should be used?",o:["Environment Variables","SSM Parameter Store","AWS Secrets Manager","IAM Role"],a:2,e:"Secrets Manager supports built-in rotation for RDS and allows Lambda to retrieve the latest secret at runtime via API."},
+    {d:"Design High-Performing Architectures",t:"Compute Selection",q:"Which EC2 instance family is optimized for workloads that process large datasets in memory, such as high-performance databases?",o:["C-Family","R-Family","T-Family","I-Family"],a:1,e:"The R-family (Memory Optimized) is designed for memory-intensive applications like SAP HANA and high-performance databases."},
+    {d:"Design Resilient Architectures",t:"Auto Scaling",q:"An application experiences sudden, sharp spikes in traffic. Which Auto Scaling policy reacts the fastest to these changes?",o:["Target Tracking","Step Scaling","Simple Scaling","Scheduled Scaling"],a:1,e:"Step scaling allows you to define multiple thresholds (steps) to add capacity based on the size of the alarm breach, making it more responsive than simple scaling."},
+    {d:"Design Secure Architectures",t:"Network Inspection",q:"Which service provides deep packet inspection (DPI) and stateful filtering for VPC traffic?",o:["WAF","Network Firewall","Security Groups","NACLs"],a:1,e:"AWS Network Firewall is a managed service that provides fine-grained, stateful inspection of all traffic entering or leaving a VPC."},
+    {d:"Design Cost-Optimized Architectures",t:"S3 Tiers",q:"A company has 50 TB of data that is rarely accessed but must be available in milliseconds when requested. Which storage class is best?",o:["S3 Standard","S3 Standard-IA","S3 Glacier Instant Retrieval","S3 Glacier Flexible Retrieval"],a:2,e:"Glacier Instant Retrieval is designed for rarely accessed data that requires millisecond retrieval, offering lower storage costs than IA."},
+    {d:"Design Resilient Architectures",t:"RDS High Availability",q:"What is the primary benefit of RDS Multi-AZ compared to Read Replicas?",o:["Scales read traffic","Provides high availability and failover","Reduces write latency","Automated backups only"],a:1,e:"Multi-AZ is for durability and HA; it maintains a synchronous standby. Read Replicas are for scaling read throughput."},
+    {d:"Design Secure Architectures",t:"WAF",q:"Which service protects web applications from common exploits like SQL Injection and Cross-Site Scripting (XSS)?",o:["AWS Shield","AWS WAF","Amazon GuardDuty","Amazon Inspector"],a:1,e:"AWS WAF allows you to create rules that block common web attack patterns at the Application Load Balancer or CloudFront level."},
+    {d:"Design High-Performing Architectures",t:"API Performance",q:"A serverless API is seeing high latency due to many repeat requests for the same data. What should be implemented?",o:["Increase Lambda Memory","API Gateway Caching","Lambda Provisioned Concurrency","Add RDS Read Replicas"],a:1,e:"API Gateway caching reduces the number of calls made to your backend by responding with cached data for identical requests."},
+    {d:"Design Resilient Architectures",t:"VPC Connectivity",q:"What is the most efficient way to connect 50 VPCs together in a hub-and-spoke model?",o:["VPC Peering","AWS Transit Gateway","VPN Mesh","Direct Connect Gateway"],a:1,e:"Transit Gateway acts as a central hub, simplifying VPC management by replacing complex peering meshes."},
+    {d:"Design Secure Architectures",t:"Threat Detection",q:"Which service uses machine learning to monitor VPC flow logs and CloudTrail for malicious activity like crypto-mining?",o:["Amazon Inspector","Amazon GuardDuty","AWS Config","Amazon Macie"],a:1,e:"GuardDuty is a continuous security monitoring service that analyzes logs to detect threats using ML and threat intelligence."},
+    {d:"Design High-Performing Architectures",t:"Storage Type",q:"An application requires sub-millisecond latency for block storage on a single EC2 instance. Which EBS type is best?",o:["General Purpose (gp3)","Provisioned IOPS (io2)","Cold HDD (sc1)","Throughput Optimized (st1)"],a:1,e:"Provisioned IOPS SSD (io2) is the highest-performance EBS volume type, designed for latency-sensitive transactional workloads."},
+    {d:"Design Resilient Architectures",t:"Disaster Recovery",q:"Which DR strategy has the lowest RTO and RPO but the highest cost?",o:["Backup and Restore","Pilot Light","Warm Standby","Multi-site Active-Active"],a:3,e:"Multi-site Active-Active involves running fully functional stacks in multiple regions, allowing for near-zero RTO/RPO."},
+    {d:"Design Secure Architectures",t:"Key Protection",q:"Which service provides FIPS 140-2 Level 3 hardware security modules for dedicated key storage?",o:["AWS KMS","AWS CloudHSM","AWS Secrets Manager","ACM"],a:1,e:"CloudHSM provides dedicated hardware that meets the Level 3 security standard, whereas KMS HSMs are Level 2."},
+    {d:"Design Cost-Optimized Architectures",t:"Savings Options",q:"A company has steady EC2 usage for the next 3 years. Which option provides the maximum discount?",o:["1-year Standard RI","3-year Convertible RI","3-year Standard RI (All Upfront)","Compute Savings Plan"],a:2,e:"Standard Reserved Instances with a 3-year term and All Upfront payment offer the deepest discount among commitment-based options."},
+    {d:"Design High-Performing Architectures",t:"Database Selection",q:"You need a NoSQL database that can scale to handle millions of requests per second with single-digit millisecond latency. Which service fits?",o:["Amazon Aurora","Amazon DynamoDB","Amazon DocumentDB","Amazon Redshift"],a:1,e:"DynamoDB is a key-value and document database that delivers consistent performance at any scale."},
+    {d:"Design Secure Architectures",t:"Audit",q:"Which service records API activity across your AWS account for security auditing and post-incident investigation?",o:["AWS Config","AWS CloudTrail","Amazon CloudWatch","VPC Flow Logs"],a:1,e:"CloudTrail provides a history of API calls made via the console, SDKs, and other services for governance and compliance."},
+    {d:"Design Resilient Architectures",t:"Static Websites",q:"What is the most resilient way to host a static website on AWS?",o:["EC2 instance with Apache","S3 Website Hosting with CloudFront","Lambda with API Gateway","EFS shared drive"],a:1,e:"S3 and CloudFront provide high availability, global reach, and low latency for static content without managing servers."},
+    {d:"Design High-Performing Architectures",t:"Global Routing",q:"Which Route 53 policy routes traffic based on the user's physical location to the nearest healthy endpoint?",o:["Latency Routing","Geolocation Routing","Geoproximity Routing","Weighted Routing"],a:1,e:"Geolocation routing directs users to specific endpoints based on their geographic location (continent, country, etc.)."},
+    {d:"Design Secure Architectures",t:"Container Security",q:"Which service scans container images in ECR for software vulnerabilities?",o:["Amazon Inspector","Amazon GuardDuty","AWS Shield","AWS WAF"],a:0,e:"Amazon Inspector provides automated vulnerability scanning for EC2 instances, Lambda, and container images in ECR."},
+    {d:"Design Cost-Optimized Architectures",t:"NAT Cost",q:"How can you reduce costs for data transfer from EC2 to S3 in a private subnet?",o:["Use a NAT instance","Use a NAT Gateway","Use a Gateway VPC Endpoint","Use a VPN"],a:2,e:"Gateway VPC Endpoints are free and eliminate data processing charges associated with NAT Gateways for S3 and DynamoDB traffic."},
+    {d:"Design Resilient Architectures",t:"Load Balancing",q:"Which type of Load Balancer is best for high-throughput, low-latency traffic at Layer 4?",o:["Application Load Balancer","Network Load Balancer","Classic Load Balancer","Gateway Load Balancer"],a:1,e:"NLB is designed to handle millions of requests per second while maintaining ultra-low latencies for TCP/UDP traffic."},
+    {d:"Design High-Performing Architectures",t:"Database Analytics",q:"An application needs to run complex SQL queries on data stored in S3 without moving it. Which service should be used?",o:["Amazon Redshift Spectrum","Amazon Athena","Amazon EMR","Amazon QuickSight"],a:1,e:"Athena is a serverless query service that allows you to analyze S3 data directly using standard SQL."},
+    {d:"Design Secure Architectures",t:"Compliance",q:"Which service provides a central place to view compliance reports from AWS for third-party auditors?",o:["AWS Config","AWS Artifact","AWS Security Hub","AWS Audit Manager"],a:1,e:"AWS Artifact provides on-demand access to AWS security and compliance reports (ISO, SOC, PCI, etc.)."},
+    {d:"Design Cost-Optimized Architectures",t:"EBS Management",q:"Which service automatically moves data between EBS volumes and S3 for backup?",o:["EBS Snapshots","AWS DataSync","AWS Backup","S3 Lifecycle"],a:2,e:"AWS Backup is a centralized service to automate and manage backups across multiple AWS services including EBS."},
+    {d:"Design Resilient Architectures",t:"Messaging",q:"Which service allows you to decouple applications by sending notifications to multiple subscribers (Pub/Sub)?",o:["Amazon SQS","Amazon SNS","Amazon MQ","Amazon Kinesis"],a:1,e:"SNS is a Pub/Sub service that can fan out messages to multiple endpoints including SQS, Lambda, and Email."},
+    {d:"Design High-Performing Architectures",t:"HPC Storage",q:"Which FSx type is optimized for sub-millisecond latencies and millions of IOPS for HPC workloads?",o:["FSx for Windows","FSx for Lustre","FSx for NetApp ONTAP","FSx for OpenZFS"],a:1,e:"FSx for Lustre is a high-performance file system designed for compute-intensive workloads like genomics and ML."},
+    {d:"Design Secure Architectures",t:"Edge Protection",q:"Which service provides 24/7 access to the AWS DDoS Response Team (DRT) for advanced attacks?",o:["Shield Standard","Shield Advanced","WAF","Global Accelerator"],a:1,e:"Shield Advanced provides higher-level protection and direct support from the DRT for sophisticated DDoS attacks."},
+    {d:"Design Cost-Optimized Architectures",t:"Compute Selection",q:"A company has a batch processing job that can be stopped and started without losing data. Which pricing model is best?",o:["On-Demand","Reserved Instances","Spot Instances","Savings Plans"],a:2,e:"Spot Instances offer up to 90% savings for fault-tolerant workloads that can handle interruptions."},
+    {d:"Design Resilient Architectures",t:"Database Failover",q:"In an RDS Multi-AZ deployment, what happens if the primary instance fails?",o:["The app must update the connection string","AWS automatically updates the DNS record to the standby","Manual failover is required","The database becomes read-only"],a:1,e:"Failover is handled automatically by AWS; the DNS endpoint remains the same, but it points to the new primary (standby)."},
+    {d:"Design High-Performing Architectures",t:"Content Delivery",q:"A website has many dynamic requests. Which CloudFront feature can optimize the path to the origin?",o:["Edge Caching","Lambda@Edge","Origin Shield","Persistent TCP connections"],a:3,e:"CloudFront uses the AWS global network and persistent connections to accelerate the delivery of dynamic, non-cacheable content."},
+    {d:"Design Secure Architectures",t:"DDoS",q:"Which service is automatically included for all AWS customers at no extra cost to protect against Layer 3 and 4 DDoS attacks?",o:["AWS Shield Standard","AWS Shield Advanced","AWS WAF","Amazon GuardDuty"],a:0,e:"Shield Standard is automatically enabled for all customers to protect the AWS infrastructure."},
+    {d:"Design Cost-Optimized Architectures",t:"Storage Management",q:"Which S3 feature automatically moves data to a lower-cost tier based on access patterns without lifecycle rules?",o:["S3 Standard-IA","S3 Intelligent-Tiering","S3 Glacier","S3 One Zone-IA"],a:1,e:"Intelligent-Tiering monitors access patterns and moves objects between frequent and infrequent access tiers automatically."},
+    {d:"Design Resilient Architectures",t:"Connectivity",q:"What is the best way to provide internet access to EC2 instances in a private subnet while blocking inbound connections?",o:["Internet Gateway","NAT Gateway","VPN","VPC Peering"],a:1,e:"A NAT Gateway allows outbound internet access for private instances while preventing external entities from initiating connections."},
+    {d:"Design High-Performing Architectures",t:"Search",q:"Which service is a managed OpenSearch (formerly Elasticsearch) service for log analytics and search?",o:["Amazon Athena","Amazon OpenSearch Service","Amazon Redshift","Amazon CloudWatch"],a:1,e:"Amazon OpenSearch Service makes it easy to deploy, operate, and scale OpenSearch for search and log analysis."},
+    {d:"Design Secure Architectures",t:"Resource Monitoring",q:"Which service evaluates your AWS resource configurations against desired settings for compliance?",o:["AWS CloudTrail","AWS Config","Amazon GuardDuty","AWS Trusted Advisor"],a:1,e:"AWS Config allows you to assess, audit, and evaluate the configurations of your AWS resources."},
+    {d:"Design Cost-Optimized Architectures",t:"Dev Environments",q:"How can you most easily save money on EC2 instances used only for development during business hours?",o:["Switch to Spot Instances","Stop instances during non-business hours","Use Reserved Instances","Use smaller instances"],a:1,e:"Stopping instances when not in use is a simple and effective cost-saving strategy for non-production environments."},
+    {d:"Design Resilient Architectures",t:"Object Storage",q:"An application requires high durability for its data. What is the standard durability of S3 objects across multiple AZs?",o:["99.9%","99.99%","99.999999999% (11 9s)","99.9999%"],a:2,e:"S3 is designed for 11 9s of durability by storing data across multiple devices and facilities in a region."},
+    {d:"Design High-Performing Architectures",t:"ML Ingest",q:"Which service is best for transforming and loading data from S3 into Redshift (ETL)?",o:["AWS DataSync","AWS Glue","Amazon EMR","Amazon Athena"],a:1,e:"AWS Glue is a serverless data integration service (ETL) that makes it easy to prepare data for analytics."},
+    {d:"Design Secure Architectures",t:"VPC Flow Logs",q:"Where can you view IP traffic information to and from network interfaces in your VPC?",o:["CloudTrail","VPC Flow Logs","Trusted Advisor","Inspector"],a:1,e:"VPC Flow Logs captures information about the IP traffic in your VPC, useful for security and troubleshooting."},
+    {d:"Design Cost-Optimized Architectures",t:"Lambda Pricing",q:"What are the two main factors that determine the cost of an AWS Lambda function?",o:["Execution count and instance size","Memory allocation and execution duration","Disk space and network transfer","CPU usage and storage"],a:1,e:"Lambda is billed based on the number of requests and the duration (time it takes to run, multiplied by the memory allocated)."},
+    {d:"Design Resilient Architectures",t:"High Availability",q:"Which service can be used to distribute traffic across EC2 instances in different AWS Regions?",o:["Application Load Balancer","Network Load Balancer","Route 53","Gateway Load Balancer"],a:2,e:"Route 53 is a global DNS service that can route traffic to different endpoints in various regions based on health checks."},
+    {d:"Design High-Performing Architectures",t:"Media",q:"Which service is a managed transcoding service that converts video files into various formats for different devices?",o:["AWS Elemental MediaLive","AWS Elemental MediaConvert","Amazon Kinesis Video Streams","Amazon CloudFront"],a:1,e:"MediaConvert is a file-based video transcoding service with broadcast-grade features."},
+    {d:"Design Secure Architectures",t:"Identity",q:"Which service allows you to manage access to multiple AWS accounts and business applications centrally?",o:["IAM","AWS IAM Identity Center","Amazon Cognito","AWS Organizations"],a:1,e:"IAM Identity Center (formerly SSO) provides central management of access across accounts and applications."},
+    {d:"Design Cost-Optimized Architectures",t:"Migration Cost",q:"Which service helps you estimate the cost of moving your on-premises workloads to AWS?",o:["AWS Pricing Calculator","AWS Migration Hub","AWS Application Discovery Service","AWS Budget"],a:0,e:"The Pricing Calculator helps you estimate monthly costs for AWS services based on your projected usage."},
+    {d:"Design Resilient Architectures",t:"Recovery",q:"Which RDS feature allows you to restore a database to a specific time within the retention period?",o:["Snapshots","Point-in-Time Recovery (PITR)","Multi-AZ","Read Replica"],a:1,e:"PITR uses transaction logs and backups to allow restoration to any second within the backup retention period."}
+];
+
+let cur=0, ans=new Array(Q.length).fill(null), flagged=new Set(), checked=new Set();
+let secondsLeft = 130 * 60; // 130 minutes
+let timerInterval = null;
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        if (secondsLeft <= 0) {
+            clearInterval(timerInterval);
+            submitTest();
+            return;
+        }
+        secondsLeft--;
+        const h = Math.floor(secondsLeft / 3600);
+        const m = Math.floor((secondsLeft % 3600) / 60);
+        const s = secondsLeft % 60;
+        const display = `${h < 10 ? '0' : ''}${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        const timerEl = document.getElementById('timer');
+        timerEl.innerText = display;
+        if (secondsLeft < 600) timerEl.classList.add('warn');
+    }, 1000);
+}
+
+function render(){
+  const q=Q[cur];
+  document.getElementById('qdomain').innerText=q.d;
+  document.getElementById('qnum').innerText=`Question ${cur+1} of ${Q.length} — ${q.t}`;
+  document.getElementById('qtxt').innerText=q.q;
+  
+  const cont=document.getElementById('qopts'); cont.innerHTML='';
+  q.o.forEach((opt,i)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    if(ans[cur]===i) d.classList.add('sel');
+    if(checked.has(cur)){
+        if(i===q.a) d.classList.add('cor');
+        else if(ans[cur]===i) d.classList.add('wrg');
+    }
+    d.innerHTML=`<div class="oltr">${String.fromCharCode(65+i)}</div><div class="otxt">${opt}</div>`;
+    if(!checked.has(cur)) d.onclick=()=>select(i);
+    cont.appendChild(d);
+  });
+
+  document.getElementById('qexp').className='exp'+(checked.has(cur)?' show':'');
+  document.getElementById('qexptxt').innerText=q.e;
+  document.getElementById('chkb').style.display=checked.has(cur)?'none':'block';
+  document.getElementById('chkb').disabled=ans[cur]===null;
+  document.getElementById('flgb').innerText=flagged.has(cur)?'Flagged':'Flag Question';
+  document.getElementById('prevb').disabled=cur===0;
+  document.getElementById('nextb').innerText=cur===Q.length-1?'Finish':'Next Question';
+  updateSidebar();
+}
+
+function select(i){ans[cur]=i; render();}
+function checkAns(){checked.add(cur); render();}
+function toggleFlag(){flagged.has(cur)?flagged.delete(cur):flagged.add(cur); render();}
+function nav(dir){
+  if(cur===Q.length-1 && dir===1){askSubmit();return;}
+  cur+=dir; render();
+}
+
+function buildSidebar(){
+  const g=document.getElementById('qgrid'); g.innerHTML='';
+  Q.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.className='qb'; b.innerText=i+1;
+    b.onclick=()=>{cur=i;render();};
+    g.appendChild(b);
+  });
+}
+
+function updateSidebar(){
+  document.querySelectorAll('.qb').forEach((b,i)=>{
+    b.className='qb';
+    if(ans[i]!==null) b.classList.add('ans');
+    if(flagged.has(i)) b.classList.add('flg');
+    if(i===cur) b.classList.add('act');
+  });
+  document.getElementById('ac').innerText=ans.filter(a=>a!==null).length;
+  document.getElementById('fc').innerText=flagged.size;
+}
+
+function askSubmit() {
+    const unanswered = ans.filter(a => a === null).length;
+    if (unanswered > 0) {
+        if (!confirm(`You have ${unanswered} unanswered questions. Submit anyway?`)) return;
+    }
+    submitTest();
+}
+
+function submitTest(){
+  clearInterval(timerInterval);
+  const score=ans.filter((a,i)=>a===Q[i].a).length;
+  const pct=Math.round((score/Q.length)*100);
+  document.getElementById('quiz-ui').style.display='none';
+  document.getElementById('rs').style.display='block';
+  document.getElementById('v-pct').innerText=pct+'%';
+  document.getElementById('v-cor').innerText=score;
+  document.getElementById('v-inc').innerText=Q.length-score;
+  document.getElementById('v-title').innerText=pct>=72?'PASSED':'FAILED';
+  document.getElementById('v-res').innerText=pct>=72?'READY':'REVIEW';
+}
+
+buildSidebar(); render(); startTimer();
+</script>
+</body>
+</html>
